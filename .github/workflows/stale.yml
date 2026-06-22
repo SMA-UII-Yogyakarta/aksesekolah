@@ -1,0 +1,26 @@
+name: Close inactive issues
+on:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  close-issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/stale@v9
+        with:
+          days-before-stale: 60
+          days-before-close: 14
+          exempt-all-labels: false
+          exempt-issue-labels: pinned,security,bug,enhancement
+          stale-issue-message: |
+            Isu ini sudah 60 hari tanpa aktivitas. Akan ditutup otomatis dalam 14 hari.
+          close-issue-message: |
+            Isu ditutup karena tidak ada aktivitas lanjutan.
+          stale-pr-message: |
+            PR ini sudah 60 hari tanpa aktivitas. Akan ditutup otomatis dalam 14 hari.
+          close-pr-message: |
+            PR ditutup karena tidak ada aktivitas lanjutan.
