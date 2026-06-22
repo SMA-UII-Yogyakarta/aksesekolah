@@ -5,6 +5,7 @@
   <p><strong>Sistem Presensi Digital Terintegrasi berbasis Web dengan Geolokasi & Biometrik Kamera</strong></p>
 
   <p align="center">
+    <a href="https://SMA-UII-Yogyakarta.github.io/aksesekolah"><img src="https://img.shields.io/badge/🌐_docs-GitHub_Pages-2ea44f?style=flat-square" /></a>
     <a href="docs/01-arsitektur-monorepo.md"><img src="https://img.shields.io/badge/arsitektur-monorepo-6C5CE7?style=flat-square" /></a>
     <a href="docs/03-requirement-analisis.md"><img src="https://img.shields.io/badge/requirements-analisis-00B894?style=flat-square" /></a>
     <a href="docs/04-erd-database.md"><img src="https://img.shields.io/badge/database-ERD-0984E3?style=flat-square" /></a>
@@ -99,9 +100,16 @@ git clone --recurse-submodules git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
 
 ---
 
-## Dokumentasi Lengkap
+## Dokumentasi Online
 
-Seluruh dokumentasi teknis tersedia di direktori [`docs/`](docs/README.md):
+Seluruh dokumentasi teknis tersedia dalam dua format:
+
+| Format | URL | Keunggulan |
+|---|---|---|
+| **🌐 GitHub Pages** | [SMA-UII-Yogyakarta.github.io/aksesekolah](https://SMA-UII-Yogyakarta.github.io/aksesekolah) | Tampilan web responsif, navigasi mudah, cocok untuk *onboarding* & *handover* |
+| **📁 Markdown (repo)** | [`docs/`](docs/README.md) | Akses langsung dari GitHub, bisa diedit & di-*review* via PR |
+
+### Daftar Dokumen
 
 | Dokumen | Isi |
 |---|---|
@@ -135,13 +143,23 @@ Seluruh dokumentasi teknis tersedia di direktori [`docs/`](docs/README.md):
 
 ## Lisensi
 
-Proyek ini dikembangkan untuk **SMA UII Yogyakarta** di bawah lisensi MIT.
+Proyek ini dikembangkan oleh **PT Koneksi Jaringan Indonesia** (*Software House — Agency Koneksi Digital*) sebagai mitra resmi pengembangan teknologi informasi **SMA UII Yogyakarta** dan dilisensikan di bawah lisensi MIT.
+
+> **Hak Cipta** — Source code © 2025–2026 PT Koneksi Jaringan Indonesia. Hak cipta dilindungi undang-undang. Source code disediakan untuk keperluan operasional SMA UII Yogyakarta. **DILARANG** memperjualbelikan, mendistribusikan ulang, atau menggunakan di luar lingkungan SMA UII Yogyakarta tanpa izin tertulis dari PT Koneksi Jaringan Indonesia dan SMA UII Yogyakarta. Kredit tetap milik PT Koneksi Jaringan Indonesia untuk menjaga otentisitas dan mencegah perjualbelian ilegal pihak ketiga di luar kesepakatan.
 
 ---
 
 <div align="center">
-  <p>Dikembangkan oleh Tim Pengembang SMA UII Yogyakarta</p>
   <p>
-    <a href="https://github.com/SMA-UII-Yogyakarta">GitHub Organization</a>
+    <strong>PT Koneksi Jaringan Indonesia</strong><br />
+    <em>Software House — Agency Koneksi Digital</em>
+  </p>
+  <p>
+    <strong>SMA UII Yogyakarta</strong><br />
+    Jl. Kaliurang Km. 14,5, Umbulmartani, Ngemplak, Sleman, DIY 55584
+  </p>
+  <p>
+    <a href="https://github.com/SMA-UII-Yogyakarta">🏫 GitHub Organization</a> ·
+    <a href="https://SMA-UII-Yogyakarta.github.io/aksesekolah">🌐 Dokumentasi Online</a>
   </p>
 </div>
