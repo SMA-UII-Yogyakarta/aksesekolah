@@ -1,0 +1,90 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "username": "sandikodev",
+  "default_agent": "build",
+  "instructions": [
+    ".opencode/SHARED/project-context.md",
+    ".opencode/SHARED/agent-rules.md"
+  ],
+  "references": {
+    "docs": {
+      "path": "docs",
+      "description": "Dokumentasi teknis SMART Absen — arsitektur, ERD, deployment, alur flow"
+    },
+    "brief": {
+      "path": "brief",
+      "description": "Dokumen perencanaan awal — analisis kebutuhan, proposal, ERD"
+    },
+    "opencode": {
+      "path": ".opencode",
+      "description": "Konfigurasi opencode & aturan AI Agent"
+    },
+    "openkb": {
+      "path": ".openkb",
+      "description": "Knowledge base personal & shared — glossary, referensi, log keputusan"
+    }
+  },
+  "agent": {
+    "build": {
+      "description": "Agent utama — eksekusi coding, dokumentasi, debugging",
+      "mode": "primary",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "plan": {
+      "description": "Agent perencanaan — analisis, arsitektur, design sebelum coding",
+      "mode": "primary",
+      "permission": {
+        "edit": "deny"
+      }
+    },
+    "review": {
+      "description": "Code review agent — periksa PR, coding style, keamanan",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "deny",
+        "bash": "deny"
+      },
+      "prompt": "Kamu adalah reviewer kode senior untuk proyek SMART Absen SMA UII. Review kode berdasarkan: 1) PSR-12 / Laravel Pint, 2) Keamanan (SQL injection, XSS), 3) Kinerja (N+1 query), 4) Konsistensi dengan arsitektur yang sudah ada. Berikan review dalam bahasa Indonesia."
+    },
+    "docs": {
+      "description": "Dokumentasi agent — buat & perbaiki dokumentasi teknis",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "deny"
+      },
+      "prompt": "Kamu adalah technical writer untuk SMART Absen SMA UII. Buat dokumentasi yang jelas, terstruktur, dan mudah dipahami oleh tim teknis maupun non-teknis. Gunakan bahasa Indonesia. Patuhi struktur markdown yang konsisten."
+    }
+  },
+  "command": {
+    "test": {
+      "description": "Jalankan PHPUnit test",
+      "template": "php artisan test $ARGUMENTS"
+    },
+    "lint": {
+      "description": "Cek coding style dengan Laravel Pint",
+      "template": "./vendor/bin/pint --test"
+    },
+    "fix": {
+      "description": "Perbaiki coding style otomatis",
+      "template": "./vendor/bin/pint"
+    },
+    "migrate": {
+      "description": "Jalankan migrasi database",
+      "template": "php artisan migrate $ARGUMENTS"
+    },
+    "fresh": {
+      "description": "Migrate fresh + seed",
+      "template": "php artisan migrate:fresh --seed"
+    },
+    "make": {
+      "description": "Buat file Laravel (model, controller, migration, dll)",
+      "template": "php artisan make:$ARGUMENTS"
+    }
+  }
+}

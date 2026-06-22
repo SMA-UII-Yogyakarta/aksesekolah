@@ -1,0 +1,12 @@
+# Personal knowledge base — tidak di-track
+.openkb/PERSONAL/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
