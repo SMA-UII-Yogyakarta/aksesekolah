@@ -156,10 +156,14 @@ Proyek ini dikembangkan oleh **PT Koneksi Jaringan Indonesia** (*Software House 
   </p>
   <p>
     <strong>SMA UII Yogyakarta</strong><br />
-    Jl. Kaliurang Km. 14,5, Umbulmartani, Ngemplak, Sleman, DIY 55584
+    Jl. Taman Siswa No.158, Wirogunan, Mergangsan, Kota Yogyakarta, DIY 55151<br />
+    Telp: (0274) 489693
   </p>
   <p>
     <a href="https://github.com/SMA-UII-Yogyakarta">🏫 GitHub Organization</a> ·
+    <a href="https://www.instagram.com/smauiiofficial/">📸 Instagram</a> ·
+    <a href="https://www.youtube.com/channel/UCaLhqaoGXpLHK-KlTwiS8aw">▶️ YouTube</a> ·
+    <a href="https://www.tiktok.com/@smauiiofficial">🎵 TikTok</a> ·
     <a href="https://SMA-UII-Yogyakarta.github.io/aksesekolah">🌐 Dokumentasi Online</a>
   </p>
 </div>
