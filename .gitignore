@@ -1,6 +1,10 @@
 # Personal knowledge base — tidak di-track
 .openkb/PERSONAL/
 
+# Environment variables (API keys, tokens)
+.env
+secrets.env
+
 # OS files
 Thumbs.db
 .DS_Store
