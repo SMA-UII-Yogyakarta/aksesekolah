@@ -22,6 +22,14 @@
     "openkb": {
       "path": ".openkb",
       "description": "Knowledge base personal & shared — glossary, referensi, log keputusan"
+    },
+    "playbook": {
+      "path": "../smauii-playbook",
+      "description": "SOP, workflow, template, ADR, role definitions, AI workflows"
+    },
+    "kaede": {
+      "path": "../kaede-powerup",
+      "description": "KAEDE Power-Up — integrasi Trello MCP & ekosistem AI Agent"
     }
   },
   "agent": {
@@ -85,6 +93,18 @@
     "make": {
       "description": "Buat file Laravel (model, controller, migration, dll)",
       "template": "php artisan make:$ARGUMENTS"
+    }
+  },
+  "mcp": {
+    "trello": {
+      "type": "local",
+      "command": "bunx",
+      "args": ["@delorenj/mcp-server-trello"],
+      "env": {
+        "TRELLO_API_KEY": "${TRELLO_API_KEY}",
+        "TRELLO_TOKEN": "${TRELLO_TOKEN}"
+      },
+      "enabled": true
     }
   }
 }
