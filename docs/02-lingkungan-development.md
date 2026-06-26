@@ -26,9 +26,9 @@ Seluruh pengembangan **SMART Absen SMA UII** dilakukan di atas **Laragon 6.0.0**
 
 | Item | Nilai |
 |---|---|
-| **Versi Aktif** | **8.5.7** (NTS, VC++ 2022 x64) |
-| Path | `C:\laragon\bin\php\php-8.5-nts-Win32-vs17-x64-latest\` |
-| Konfigurasi | `C:\laragon\bin\php\php-8.5-nts-Win32-vs17-x64-latest\php.ini` |
+| **Versi Aktif** | **8.4.22** (NTS, VC++ 2022 x64) |
+| Path | `C:\laragon\bin\php\php-8.4.22-nts-Win32-vs17-x64\` |
+| Konfigurasi | `C:\laragon\bin\php\php-8.4.22-nts-Win32-vs17-x64\php.ini` |
 | `memory_limit` | 512M |
 | `max_execution_time` | 36000 (10 jam) |
 | `post_max_size` | 2G |
@@ -44,7 +44,7 @@ Seluruh pengembangan **SMART Absen SMA UII** dilakukan di atas **Laragon 6.0.0**
 | 8.1.31 | `C:\laragon\bin\php\php-8.1.31-nts-Win32-vs16-x64\` | ✅ 3.4.1 |
 | 8.1.10 | `C:\laragon\bin\php\php-8.1.10-Win32-vs16-x64\` | ❌ |
 
-> **Catatan Xdebug:** PHP 8.5.7 belum memiliki ekstensi Xdebug yang kompatibel. Untuk kebutuhan debugging, gunakan PHP 8.1.31 yang dapat dipilih melalui menu Laragon > PHP > Versi.
+> **Catatan Xdebug:** PHP 8.4.22 belum memiliki ekstensi Xdebug yang kompatibel. Untuk kebutuhan debugging, gunakan PHP 8.1.31 yang dapat dipilih melalui menu Laragon > PHP > Versi.
 
 ### Web Server
 
