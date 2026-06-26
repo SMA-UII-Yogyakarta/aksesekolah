@@ -114,7 +114,7 @@ Seluruh dokumentasi teknis tersedia dalam dua format:
 | Dokumen | Isi |
 |---|---|
 | [Arsitektur Monorepo](docs/01-arsitektur-monorepo.md) | Submodules, tata letak direktori, diagram |
-| [Lingkungan Development](docs/02-lingkungan-development.md) | Laragon, PHP 8.5, MySQL 8.0, troubleshooting |
+| [Lingkungan Development](docs/02-lingkungan-development.md) | Laragon, PHP 8.4, MySQL 8.0, troubleshooting |
 | [Analisis Kebutuhan](docs/03-requirement-analisis.md) | Fungsional (14 fitur) + Non-fungsional (12 item) |
 | [ERD & Database](docs/04-erd-database.md) | 10 tabel, indexing strategy, SQL DDL |
 | [Modul & Alur Flow](docs/05-modul-alur-flow.md) | Skenario lengkap tiap peran |
@@ -129,7 +129,7 @@ Seluruh dokumentasi teknis tersedia dalam dua format:
 
 | Layer | Teknologi |
 |---|---|
-| **Backend** | PHP 8.5 / Laravel 13 |
+| **Backend** | PHP 8.4 / Laravel 13 |
 | **Database** | MySQL 8.0 |
 | **Cache & Queue** | Redis |
 | **Object Storage** | S3-compatible (Wasabi / MinIO / Backblaze B2) |

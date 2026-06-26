@@ -4,7 +4,7 @@
 Sistem presensi digital SMA UII Yogyakarta berbasis web dengan geolokasi, swafoto kamera, dan SSO. Dikembangkan oleh PT Koneksi Jaringan Indonesia.
 
 ## Tech Stack
-- **Backend**: PHP 8.5 / Laravel 13 — repositori: `core.git`
+- **Backend**: PHP 8.4 / Laravel 13 — repositori: `core.git`
 - **Database**: MySQL 8.0
 - **Cache & Queue**: Redis / Database driver
 - **Object Storage**: S3-compatible (Wasabi / MinIO)
