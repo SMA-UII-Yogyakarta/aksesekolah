@@ -165,3 +165,4 @@ Proyek ini dikembangkan oleh **PT Koneksi Jaringan Indonesia** (*Software House 
     <a href="https://SMA-UII-Yogyakarta.github.io/aksesekolah">🌐 Dokumentasi Online</a>
   </p>
 </div>
+.
