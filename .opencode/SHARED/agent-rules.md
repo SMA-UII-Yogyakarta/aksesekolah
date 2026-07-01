@@ -21,22 +21,22 @@ test:     Adding tests
 
 ## Branching
 ```
-main → develop → feature/nama-fitur
+main → develop → feature/feature-name
 ```
-- `main`: production — protected, hanya via PR
+- `main`: production — protected, via PR only
 - `develop`: integration branch
-- `feature/*`: untuk development harian
+- `feature/*`: for daily development
 
 ## Laravel Conventions
-- Route: web.php untuk Inertia pages, api.php untuk API Sanctum
-- Controller: single action prefer method `__invoke` untuk simple case
+- Route: web.php for Inertia pages, api.php for API Sanctum
+- Controller: single action prefer method `__invoke` for simple case
 - Validation: Form Request class
-- Database: migration + seeder, jangan langsung edit SQL
-- Eloquent: eager loading untuk mencegah N+1
-- Config: semua environment variable via `.env`, bukan hardcode
+- Database: migration + seeder, do not edit SQL directly
+- Eloquent: eager loading to prevent N+1
+- Config: all environment variables via `.env`, not hardcoded
 
-## Keamanan
-- Jangan commit `.env`, key, token, password
-- Jangan expose debug info di production
-- Gunakan prepared statements (via Eloquent)
-- Input user harus divalidasi & di-sanitize
+## Security
+- Do not commit `.env`, key, token, password
+- Do not expose debug info in production
+- Use prepared statements (via Eloquent)
+- User input must be validated & sanitized
