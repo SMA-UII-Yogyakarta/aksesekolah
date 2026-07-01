@@ -6,8 +6,9 @@ Basis data SMART Absen SMA UII dirancang dengan prinsip:
 
 1. **Index-first** — semua kolom yang digunakan dalam pencarian (WHERE, JOIN, ORDER BY) wajib memiliki index
 2. **No BLOB** — file gambar dan dokumen tidak disimpan di database, cukup URL ke Object Storage
-3. **Enum ketat** — menggunakan ENUM untuk kolom yang memiliki nilai tetap (role, status, kategori)
-4. **Relasi terindeks** — setiap Foreign Key harus memiliki index untuk performa JOIN
+3. **Enum ketat** — menggunakan tipe VARCHAR + CHECK constraint (PostgreSQL tidak memiliki ENUM native seperti MySQL, jadi gunakan Laravel enum casting + check constraint)
+4. **JSONB untuk data semi-structured** — gunakan JSONB (PostgreSQL) untuk kolom yang strukturnya dinamis (misal: metadata presensi, preferensi pengguna)
+5. **Relasi terindeks** — setiap Foreign Key harus memiliki index untuk performa JOIN
 
 ---
 

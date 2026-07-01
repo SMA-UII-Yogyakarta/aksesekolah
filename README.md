@@ -69,7 +69,7 @@ smauii-aksesekolah/
 ### Prasyarat
 
 - [Laragon](https://laragon.org) 6.0+ (full stack web environment)
-- PHP 8.3+, MySQL 8.0+, Composer
+- PHP 8.4+, PostgreSQL 16+, Composer, Bun
 - Git + SSH key terdaftar di GitHub
 
 ### Setup Backend
@@ -114,7 +114,7 @@ Seluruh dokumentasi teknis tersedia dalam dua format:
 | Dokumen | Isi |
 |---|---|
 | [Arsitektur Monorepo](docs/01-arsitektur-monorepo.md) | Submodules, tata letak direktori, diagram |
-| [Lingkungan Development](docs/02-lingkungan-development.md) | Laragon, PHP 8.4, MySQL 8.0, troubleshooting |
+| [Lingkungan Development](docs/02-lingkungan-development.md) | Laragon, PHP 8.4, PostgreSQL 16, troubleshooting |
 | [Analisis Kebutuhan](docs/03-requirement-analisis.md) | Fungsional (14 fitur) + Non-fungsional (12 item) |
 | [ERD & Database](docs/04-erd-database.md) | 10 tabel, indexing strategy, SQL DDL |
 | [Modul & Alur Flow](docs/05-modul-alur-flow.md) | Skenario lengkap tiap peran |
@@ -130,13 +130,11 @@ Seluruh dokumentasi teknis tersedia dalam dua format:
 | Layer | Teknologi |
 |---|---|
 | **Backend** | PHP 8.4 / Laravel 13 |
-| **Database** | MySQL 8.0 |
+| **Database** | PostgreSQL 16 (NeonDB) |
 | **Cache & Queue** | Redis |
 | **Object Storage** | S3-compatible (Wasabi / MinIO / Backblaze B2) |
 | **Web Server** | Apache (dev) / Nginx (production) |
-| **Frontend** | Blade + Tailwind CSS 4 + Vite |
-| **Charts** | Chart.js / ApexCharts |
-| **Data Tables** | DataTables (jQuery) |
+| **Frontend** | InertiaJS 3 + React 19 + TypeScript + Tailwind CSS 4 + Vite |
 | **Auth** | Laravel Sanctum (SSO / Identity Provider) |
 
 ---

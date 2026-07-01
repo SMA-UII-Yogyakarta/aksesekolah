@@ -29,7 +29,7 @@ Sistem ini mengintegrasikan:
 |---|---|
 | F-01 | Sistem harus menyediakan satu portal autentikasi (login) tunggal untuk seluruh kategori pengguna |
 | F-02 | Sistem harus otomatis mendeteksi peran (role) setelah login berhasil dan mengarahkan ke dashboard masing-masing |
-| F-03 | Arsitektur login harus dirancang sebagai **Identity Provider (IdP)** menggunakan Laravel Passport/Sanctum agar dapat digunakan oleh aplikasi yayasan lain di masa depan |
+| F-03 | Arsitektur login harus dirancang sebagai **Identity Provider (IdP)** menggunakan Laravel Sanctum agar dapat digunakan oleh aplikasi yayasan lain di masa depan |
 
 ### 2. Modul Admin — Pengelola Pusat
 

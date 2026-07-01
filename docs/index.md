@@ -29,7 +29,7 @@ Seluruh dokumentasi tersedia dalam repositori ini. Silakan navigasi sesuai peran
 | Dokumen | Deskripsi |
 |---|---|
 | [Arsitektur Monorepo](01-arsitektur-monorepo.md) | Struktur monorepo, git submodules, tata letak direktori |
-| [Lingkungan Development](02-lingkungan-development.md) | Setup Laragon, PHP 8.4, MySQL 8.0, troubleshooting |
+| [Lingkungan Development](02-lingkungan-development.md) | Setup Laragon, PHP 8.4, PostgreSQL 16, troubleshooting |
 | [Keamanan & SSO](06-keamanan-sso.md) | Laravel Sanctum, RBAC, Triple-Layer Validation |
 | [Git Workflow](07-git-workflow-submodule.md) | Branching strategy, manajemen submodule, CI/CD |
 | [Deployment & Infrastruktur](09-deployment-infrastruktur.md) | VPS, Nginx, object storage S3, performance tuning |
@@ -42,11 +42,11 @@ Seluruh dokumentasi tersedia dalam repositori ini. Silakan navigasi sesuai peran
 
 | Tool | Keterangan |
 |---|---|
-| [Laragon](https://laragon.org) 6.0+ | Full-stack web environment (PHP, MySQL, Apache) |
+| [Laragon](https://laragon.org) 6.0+ | Full-stack web environment (PHP, Apache) |
 | PHP 8.3+ | Sudah termasuk Laragon |
-| MySQL 8.0+ | Sudah termasuk Laragon |
+| PostgreSQL 16 | Database (via NeonDB atau Laragon add-on) |
 | Composer | Dependency manager PHP |
-| Node.js 22+ | Build tooling (Vite) |
+| Bun 1.2+ | Package manager & build tooling frontend |
 
 ### Clone & Setup
 

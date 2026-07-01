@@ -5,11 +5,11 @@
 ### Diagram High-Level
 
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│   Browser    │────>│  VPS Server  │────>│  MySQL 8.0   │
-│  (siswa,     │     │  (Apache/    │     │  (Laravel    │
-│   guru, dll) │     │   Nginx)     │     │   App)       │
-└──────────────┘     │  Laravel     │     └──────────────┘
+┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
+│   Browser    │────>│  VPS Server  │────>│  NeonDB          │
+│  (siswa,     │     │  (Nginx/     │     │  (PostgreSQL 16) │
+│   guru, dll) │     │   PHP-FPM)   │     │  serverless      │
+└──────────────┘     │  Laravel     │     └──────────────────┘
                      │              │
                      └──────┬───────┘
                             │
@@ -26,7 +26,7 @@
 | Komponen | Spesifikasi | Catatan |
 |---|---|---|
 | CPU | Minimal 4 Core | Untuk menangani 750+ CCU |
-| RAM | Minimal 8 GB | Laravel + MySQL cukup berat |
+| RAM | Minimal 8 GB | Laravel + PostgreSQL cukup berat |
 | Storage | 100 GB SSD/NVMe | Kecepatan I/O kritis untuk presensi |
 | Bandwidth | 1 Gbps | Peak traffic 06:30-07:00 |
 | OS | Ubuntu 24.04 LTS | — |
@@ -36,8 +36,8 @@
 | Layer | Teknologi | Alasan |
 |---|---|---|
 | **Web Server** | Nginx + PHP-FPM | Lebih ringan dari Apache untuk production |
-| **PHP** | 8.3+ (LTS) | Stabil, kompatibel dengan Laravel |
-| **Database** | MySQL 8.0 / MariaDB 11 | — |
+| **PHP** | 8.4+ | Stabil, kompatibel dengan Laravel 13 |
+| **Database** | PostgreSQL 16 via NeonDB | Serverless, auto-scaling, branching, PgBouncer built-in |
 | **Cache** | Redis | Untuk session, cache, queue |
 | **Queue** | Redis + Laravel Queue | Untuk background job (upload foto, dll) |
 | **Object Storage** | MinIO / Wasabi / Backblaze B2 | S3-compatible |
@@ -81,15 +81,20 @@ server {
 }
 ```
 
-### Tuning MySQL (max_connections)
+### Tuning PostgreSQL (Production)
+
+NeonDB menangani tuning server-side secara otomatis. Untuk self-managed PostgreSQL:
 
 ```ini
-[mysqld]
-max_connections = 1000
-innodb_buffer_pool_size = 2G
-innodb_log_file_size = 512M
-innodb_flush_log_at_trx_commit = 2
-query_cache_type = 0
+# postgresql.conf
+max_connections = 200
+shared_buffers = 1GB
+effective_cache_size = 3GB
+work_mem = 64MB
+maintenance_work_mem = 256MB
+random_page_cost = 1.1          # SSD
+effective_io_concurrency = 200  # SSD
+wal_buffers = 16MB
 ```
 
 ### PHP-FPM Tuning
@@ -189,9 +194,9 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://absen.smauii.sch.id
 
-DB_CONNECTION=mysql
+DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
-DB_PORT=3306
+DB_PORT=5432
 DB_DATABASE=smauii_core
 DB_USERNAME=smauii_user
 DB_PASSWORD=********
@@ -219,7 +224,7 @@ AWS_URL=https://smauii-presensi.s3.wasabisys.com
 ## Checklist Deployment
 
 - [ ] VPS sudah terinstall Ubuntu 24.04 LTS
-- [ ] Nginx + PHP 8.3 + MySQL 8.0 sudah terinstall
+- [ ] Nginx + PHP 8.4 + PostgreSQL 16 sudah terinstall
 - [ ] Redis sudah terinstall dan berjalan
 - [ ] SSL certificate sudah aktif (Let's Encrypt / manual)
 - [ ] Domain `absen.smauii.sch.id` sudah mengarah ke IP VPS

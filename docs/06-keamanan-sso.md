@@ -17,7 +17,7 @@ SMART Absen SMA UII menggunakan pendekatan **Single Sign-On (SSO) mandiri** yang
 │  └──────────────┘  └──────────────┘  └──────────────┘  │
 │                                                          │
 │  ┌──────────────────────────────────────────────────┐   │
-│  │            SSO Session (Sanctum/Passport)         │   │
+│  │            SSO Session (Sanctum)                   │   │
 │  └──────────────────────────────────────────────────┘   │
 └──────────────────────┬──────────────────────────────────┘
                        │
@@ -34,14 +34,15 @@ SMART Absen SMA UII menggunakan pendekatan **Single Sign-On (SSO) mandiri** yang
 
 ### Teknologi yang Digunakan
 
-**Rekomendasi: Laravel Sanctum**
+**Laravel Sanctum + Spatie Laravel Permission**
 
 | Alasan | Detail |
 |---|---|
 | **Sederhana** | API token berbasis database, cocok untuk SPA dan mobile |
-| **Stateful** | Bisa pakai session-based auth untuk web tradisional |
+| **Stateful** | Session-based auth untuk Inertia pages |
 | **Stateless** | API token untuk aplikasi third-party di masa depan |
-| **Built-in** | Sudah termasuk di Laravel, tidak perlu package tambahan |
+| **Built-in** | Sanctum dan Spatie terintegrasi native dengan Laravel |
+| **RBAC** | Spatie menyediakan role, permission, team, dan blade directive |
 
 ---
 
@@ -77,24 +78,64 @@ SMART Absen SMA UII menggunakan pendekatan **Single Sign-On (SSO) mandiri** yang
 └──────────────┘    └──────────────────────┘
 ```
 
-### Implementasi Middleware
+### Implementasi dengan Spatie Laravel Permission
+
+```bash
+# Instalasi
+bun add composer spatie/laravel-permission
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+php artisan migrate
+```
 
 ```php
-// Di Laravel, buat middleware untuk tiap role:
+// Definisi role & permission di seeder / Service Provider
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
-class RoleMiddleware
-{
-    public function handle(Request $request, Closure $next, string $role): Response
-    {
-        if (! $request->user() || $request->user()->role !== $role) {
-            abort(403, 'Unauthorized');
-        }
-        return $next($request);
-    }
-}
+// Buat permission
+Permission::create(['name' => 'create-presensi']);
+Permission::create(['name' => 'view-laporan']);
+Permission::create(['name' => 'manage-user']);
+Permission::create(['name' => 'manage-kelas']);
+Permission::create(['name' => 'approve-izin']);
 
-// Registrasi di Kernel / Route:
-// Route::middleware('role:admin')->group(...);
+// Buat role + assign permission
+$superAdmin = Role::create(['name' => 'super-admin']); // all permissions via gate
+$admin = Role::create(['name' => 'admin']);
+$admin->givePermissionTo(['create-presensi', 'view-laporan', 'manage-user', 'manage-kelas', 'approve-izin']);
+
+$guru = Role::create(['name' => 'guru']);
+$guru->givePermissionTo(['create-presensi', 'view-laporan', 'approve-izin']);
+
+$siswa = Role::create(['name' => 'siswa']);
+$siswa->givePermissionTo(['create-presensi']);
+
+$waliMurid = Role::create(['name' => 'wali-murid']);
+$waliMurid->givePermissionTo(['view-laporan', 'approve-izin']);
+```
+
+```php
+// Penggunaan di Route
+use Illuminate\Support\Facades\Route;
+
+Route::middleware(['auth:sanctum', 'role:admin|super-admin'])->group(function () {
+    Route::resource('users', UserController::class);
+});
+
+Route::middleware(['auth:sanctum', 'permission:create-presensi'])->group(function () {
+    Route::post('/presensi', [PresensiController::class, 'store']);
+});
+```
+
+```php
+// Penggunaan di Blade/Inertia
+@role('admin')
+    <!-- tampilkan admin panel -->
+@endrole
+
+@can('view-laporan')
+    <!-- tampilkan tombol laporan -->
+@endcan
 ```
 
 ---
@@ -205,7 +246,7 @@ if ($waktuSekarang < $pengaturan->jam_buka_masuk) { ... }
 | Aspek | Metode |
 |---|---|
 | Web (Browser) | Session-based via Laravel cookie |
-| API (Mobile future) | Sanctum token / Passport |
+| API (Mobile future) | Sanctum token |
 | CSRF Protection | Laravel built-in CSRF token |
 | Password hashing | Bcrypt (12 rounds) |
 

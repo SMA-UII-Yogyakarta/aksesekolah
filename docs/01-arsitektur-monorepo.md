@@ -37,8 +37,8 @@ smauii-aksesekolah/                        ← origin: git@github.com:SMA-UII-Yo
 │   │                                          Backend Laravel (implementasi utama)
 │   │
 │   ├── frontend/                          ← submodule → git@github.com:SMA-UII-Yogyakarta/webapp.git
-│   │                                          Frontend terpisah (React/Vue/Livewire)
-│   │                                          [FUTURE - belum diaktifkan]
+│   │                                          Frontend terpisah (Next.js)
+│   │                                          [FUTURE - belum diaktifkan — Fase 2]
 │   │
 │   ├── mobile/                            ← submodule → git@github.com:SMA-UII-Yogyakarta/flutter.git
 │   │                                          Mobile app native (Android/iOS)

@@ -34,7 +34,7 @@ Seluruh pengembangan **SMART Absen SMA UII** dilakukan di atas **Laragon 6.0.0**
 | `post_max_size` | 2G |
 | `upload_max_filesize` | 2G |
 | `date.timezone` | **Asia/Jakarta** ✅ |
-| Ekstensi Aktif | curl, gd, intl, mbstring, mysqli, pdo_mysql, zip, openssl, xsl |
+| Ekstensi Aktif | curl, gd, intl, mbstring, mysqli, pdo_mysql, **pdo_pgsql**, **pgsql**, zip, openssl, xsl |
 
 **PHP Lain yang Tersedia:**
 
@@ -60,24 +60,40 @@ Seluruh pengembangan **SMART Absen SMA UII** dilakukan di atas **Laragon 6.0.0**
 
 | Item | Nilai |
 |---|---|
-| **Database Aktif** | **MySQL 8.0.30** — Community Server |
-| Path | `C:\laragon\bin\mysql\mysql-8.0.30-winx64\` |
-| Port | 3306 |
-| Data Directory | `C:/laragon/data/mysql-8` |
-| Root User | `root` (tanpa password) |
-| `max_connections` | Default — **harus dinaikkan ke 1000** untuk produksi |
+| **Database Aktif** | **PostgreSQL 16** — via NeonDB (production) / Laragon (local) |
+| Path (Laragon) | `C:\laragon\bin\postgresql\postgresql-16.x-winx64\` (install manual) |
+| Port | 5432 |
+| Root User | `postgres` (tanpa password lokal) |
+| NeonDB Production | `ep-xxx-xxxx.us-east-2.aws.neon.tech` (serverless) |
+| NeonDB Branching | Tiap fitur/PR bisa punya DB branch sendiri |
+
+**Catatan:** MySQL 8.0.30 masih tersedia di Laragon (`C:\laragon\bin\mysql\mysql-8.0.30-winx64\`, port 3306) untuk kompatibilitas, namun tidak digunakan oleh proyek ini. Seluruh environment menggunakan PostgreSQL.
+
+### Instalasi PostgreSQL di Laragon
+
+1. Download PostgreSQL zip dari [EnterpriseDB](https://www.enterprisedb.com/download-postgresql-binaries) atau [PostgreSQL Windows](https://www.postgresql.org/download/windows/)
+2. Extract ke `C:\laragon\bin\postgresql\postgresql-16.x-winx64\`
+3. Tambahkan service PostgreSQL via Laragon: Menu > Tools > Service/Port > PostgreSQL
+4. Inisialisasi database cluster:
+   ```bash
+   "C:\laragon\bin\postgresql\postgresql-16.x-winx64\bin\initdb.exe" -D "C:/laragon/data/postgresql-16" --username=postgres
+   ```
+5. Jalankan PostgreSQL dari Laragon
 
 ### Tools Lain
 
 | Tool | Versi | Path |
-|---|---|---|
+|---|---|---|---|
 | Node.js | 22.14.0 | `C:\laragon\bin\nodejs\node-v22.14.0-win-x64\` |
-| npm | 10.9.2 | — |
+| **Bun** | **latest** | `C:\Users\<user>\.bun\bin\bun.exe` (install: `powershell -c "irm bun.sh/install.ps1 | iex"`) |
 | Composer | latest (portable) | `C:\laragon\bin\composer\composer.phar` |
 | Redis | 5.0.14.1 | `C:\laragon\bin\redis\redis-x64-5.0.14.1\` |
 | Memcached | 1.6.8 | `C:\laragon\bin\memcached\memcached-1.6.8-win64-mingw\` |
+| pgAdmin / DBeaver | latest | GUI tools untuk PostgreSQL |
 | Git | (via Windows PATH) | `C:\Program Files\Git\cmd\git.EXE` |
 | GitHub CLI | 2.95.0 | `gh` |
+
+> **Catatan:** Gunakan **Bun** untuk package management frontend (bukan npm). Bun lebih cepat, built-in TypeScript support, dan kompatibel dengan Vite 8.
 
 ---
 
@@ -98,7 +114,7 @@ Semua proyek di `C:\laragon\www` otomatis mendapatkan virtual host dengan domain
 
 1. Unduh Laragon dari [https://laragon.org/download](https://laragon.org/download) (versi **Full** direkomendasikan)
 2. Install ke `C:\laragon` (pastikan tidak ada spasi di path)
-3. Jalankan Laragon, pastikan Apache + MySQL menyala (tombol **Start All**)
+3. Jalankan Laragon, pastikan Apache + PostgreSQL menyala (tombol **Start All**)
 
 ### 2. Clone Repositori
 
@@ -111,13 +127,26 @@ git clone git@github.com:SMA-UII-Yogyakarta/aksesekolah.git smauii-aksesekolah
 git clone git@github.com:SMA-UII-Yogyakarta/core.git smauii-core
 ```
 
-### 3. Setup Backend (core)
+### 3. Setup Bun (Package Manager Frontend)
+
+```bash
+# Install Bun (Windows PowerShell)
+powershell -c "irm bun.sh/install.ps1 | iex"
+
+# Verifikasi
+bun --version
+```
+
+### 4. Setup Backend (core)
 
 ```bash
 cd C:\laragon\www\smauii-core
 
-# Install dependencies
+# Install PHP dependencies
 composer install
+
+# Install JS/TS dependencies (via Bun, bukan npm!)
+bun install
 
 # Copy environment
 cp .env.example .env
@@ -126,11 +155,21 @@ cp .env.example .env
 # Generate APP_KEY
 php artisan key:generate
 
+# Setup database
+# Buat database smauii_core via pgAdmin / DBeaver, atau:
+php artisan db:create  # (jika pakai package db-tools)
+
 # Jalankan migrasi
 php artisan migrate --seed
+
+# Install Laravel Sanctum (token management)
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+# Install Spatie Laravel Permission (RBAC)
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 ```
 
-### 4. Inisialisasi Submodule Monorepo
+### 5. Inisialisasi Submodule Monorepo
 
 ```bash
 cd C:\laragon\www\smauii-aksesekolah
@@ -143,7 +182,7 @@ git remote add origin git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
 git submodule update --init --recursive
 ```
 
-### 5. Konfigurasi .env (Backend)
+### 6. Konfigurasi .env (Backend)
 
 ```env
 APP_NAME="SMAUII Core"
@@ -151,19 +190,28 @@ APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://smauii-core.test
 
-DB_CONNECTION=mysql
+# Local development (PostgreSQL via Laragon)
+DB_CONNECTION=pgsql
 DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=smauii-core
-DB_USERNAME=root
+DB_PORT=5432
+DB_DATABASE=smauii_core
+DB_USERNAME=postgres
 DB_PASSWORD=
+
+# Production (NeonDB) — uncomment saat deploy
+# DB_HOST=ep-xxx-xxxx.us-east-2.aws.neon.tech
+# DB_PORT=5432
+# DB_DATABASE=smauii_production
+# DB_USERNAME=smauii_owner
+# DB_PASSWORD=xxxxxx
+# DB_SSLMODE=require
 
 SESSION_DRIVER=database
 QUEUE_CONNECTION=database
 CACHE_STORE=database
 ```
 
-### 6. Konfigurasi Virtual Host
+### 7. Konfigurasi Virtual Host
 
 Laragon akan otomatis membuat virtual host `smauii-core.test` saat folder `smauii-core` terdeteksi.
 Namun, Laravel memerlukan `DocumentRoot` mengarah ke `public/`. Jika terjadi *directory listing*,
@@ -189,7 +237,7 @@ Pastikan `DocumentRoot` dan `<Directory>` mengarah ke `.../smauii-core/public`:
 
 Setelah diubah, restart Apache dari menu Laragon.
 
-### 7. Verifikasi
+### 8. Verifikasi
 
 - Buka `http://smauii-core.test` — seharusnya menampilkan halaman selamat datang Laravel
 - Buka `http://smauii-aksesekolah.test` — seharusnya menampilkan dokumentasi
@@ -231,7 +279,10 @@ gh auth login
 | Masalah | Solusi |
 |---|---|
 | **Directory listing** saat buka `smauii-core.test` | DocumentRoot belum diarahkan ke `/public` — ikuti langkah 6 di atas |
-| **MySQL connection refused** | Pastikan MySQL menyala di Laragon (tombol Start All) |
+| **PostgreSQL connection refused** | Pastikan PostgreSQL menyala di Laragon (Menu > Tools > Service/Port > PostgreSQL) |
+| **pdo_pgsql not found** | Pastikan PHP 8.4 punya ekstensi pdo_pgsql dan pgsql (cek `php -m`). Tambahkan `extension=pdo_pgsql` di php.ini jika belum. |
 | **Composer not found** | Gunakan `C:\laragon\bin\composer\composer.bat` atau langsung `php C:\laragon\bin\composer\composer.phar` |
-| **Port 80/3306 sudah dipakai** | Cek aplikasi lain (Skype, Docker, IIS) yang menggunakan port tersebut |
+| **Bun command not found** | Pastikan Bun terinstal: `bun --version`. Install: `powershell -c "irm bun.sh/install.ps1 | iex"` |
+| **Port 80/5432 sudah dipakai** | Cek aplikasi lain (Skype, Docker, IIS) yang menggunakan port tersebut |
 | **APP_KEY not set** | Jalankan `php artisan key:generate` |
+| **Bun install gagal di Windows** | Coba jalankan PowerShell sebagai Administrator, atau install ulang: `powershell -c "irm bun.sh/install.ps1 | iex"` |
