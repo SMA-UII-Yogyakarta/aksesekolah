@@ -1,139 +1,139 @@
-# Lingkungan Development
+# Development Environment
 
-## Ringkasan
+## Summary
 
-Seluruh pengembangan **SMART Absen SMA UII** dilakukan di atas **Laragon 6.0.0** — sebuah *local development environment* untuk Windows yang menyediakan stack web server terintegrasi.
+All development for **SMART Absen SMA UII** is done on **Laragon 6.0.0** — a *local development environment* for Windows that provides an integrated web server stack.
 
-> **Catatan Penting:** Semua developer diwajibkan menggunakan Laragon agar lingkungan kerja seragam. Penggunaan XAMPP, WAMP, atau tool lain sangat tidak disarankan karena perbedaan konfigurasi dan path.
+> **Important Note:** All developers are required to use Laragon to ensure a uniform working environment. The use of XAMPP, WAMP, or other tools is strongly discouraged due to configuration and path differences.
 
 ---
 
-## Spesifikasi Lingkungan Terkini
+## Current Environment Specifications
 
 ### Laragon
 
-| Item | Nilai |
+| Item | Value |
 |---|---|
-| Versi | 6.0.0.2 |
-| Instalasi | `C:\laragon` |
+| Version | 6.0.0.2 |
+| Installation | `C:\laragon` |
 | Data | `C:\laragon\data` |
 | Document Root | `C:\laragon\www` |
-| Run at Startup | Ya |
-| Auto VirtualHosts | Aktif (semua folder `.test` otomatis) |
-| SSL | Aktif (port 443) |
+| Run at Startup | Yes |
+| Auto VirtualHosts | Enabled (all `.test` folders automatic) |
+| SSL | Enabled (port 443) |
 
 ### PHP
 
-| Item | Nilai |
+| Item | Value |
 |---|---|
-| **Versi Aktif** | **8.4.22** (NTS, VC++ 2022 x64) |
+| **Active Version** | **8.4.22** (NTS, VC++ 2022 x64) |
 | Path | `C:\laragon\bin\php\php-8.4.22-nts-Win32-vs17-x64\` |
-| Konfigurasi | `C:\laragon\bin\php\php-8.4.22-nts-Win32-vs17-x64\php.ini` |
+| Configuration | `C:\laragon\bin\php\php-8.4.22-nts-Win32-vs17-x64\php.ini` |
 | `memory_limit` | 512M |
-| `max_execution_time` | 36000 (10 jam) |
+| `max_execution_time` | 36000 (10 hours) |
 | `post_max_size` | 2G |
 | `upload_max_filesize` | 2G |
 | `date.timezone` | **Asia/Jakarta** ✅ |
-| Ekstensi Aktif | curl, gd, intl, mbstring, mysqli, pdo_mysql, **pdo_pgsql**, **pgsql**, zip, openssl, xsl |
+| Active Extensions | curl, gd, intl, mbstring, mysqli, pdo_mysql, **pdo_pgsql**, **pgsql**, zip, openssl, xsl |
 
-**PHP Lain yang Tersedia:**
+**Other Available PHP Versions:**
 
-| Versi | Path | Xdebug |
+| Version | Path | Xdebug |
 |---|---|---|
 | 8.2.27 | `C:\laragon\bin\php\php-8.2.27-nts-Win32-vs16-x64\` | ❌ |
 | 8.1.31 | `C:\laragon\bin\php\php-8.1.31-nts-Win32-vs16-x64\` | ✅ 3.4.1 |
 | 8.1.10 | `C:\laragon\bin\php\php-8.1.10-Win32-vs16-x64\` | ❌ |
 
-> **Catatan Xdebug:** PHP 8.4.22 belum memiliki ekstensi Xdebug yang kompatibel. Untuk kebutuhan debugging, gunakan PHP 8.1.31 yang dapat dipilih melalui menu Laragon > PHP > Versi.
+> **Xdebug Note:** PHP 8.4.22 does not yet have a compatible Xdebug extension. For debugging needs, use PHP 8.1.31 which can be selected via Laragon menu > PHP > Version.
 
 ### Web Server
 
-| Item | Nilai |
+| Item | Value |
 |---|---|
-| **Server Aktif** | **Apache 2.4.54** (mod_fcgid) |
-| Path Apache | `C:\laragon\bin\apache\httpd-2.4.54-win64-VS16\` |
+| **Active Server** | **Apache 2.4.54** (mod_fcgid) |
+| Apache Path | `C:\laragon\bin\apache\httpd-2.4.54-win64-VS16\` |
 | PHP Handler | FastCGI (mod_fcgid) via `C:\laragon\etc\apache2\fcgid.conf` |
 | DocumentRoot | `C:\laragon\www` |
-| Nginx (opsional) | 1.22.0 (tidak aktif) |
+| Nginx (optional) | 1.22.0 (not active) |
 
 ### Database
 
-| Item | Nilai |
+| Item | Value |
 |---|---|
-| **Database Aktif** | **PostgreSQL 16** — via NeonDB (production) / Laragon (local) |
-| Path (Laragon) | `C:\laragon\bin\postgresql\postgresql-16.x-winx64\` (install manual) |
+| **Active Database** | **PostgreSQL 16** — via NeonDB (production) / Laragon (local) |
+| Path (Laragon) | `C:\laragon\bin\postgresql\postgresql-16.x-winx64\` (manual install) |
 | Port | 5432 |
-| Root User | `postgres` (tanpa password lokal) |
+| Root User | `postgres` (no local password) |
 | NeonDB Production | `ep-xxx-xxxx.us-east-2.aws.neon.tech` (serverless) |
-| NeonDB Branching | Tiap fitur/PR bisa punya DB branch sendiri |
+| NeonDB Branching | Each feature/PR can have its own DB branch |
 
-**Catatan:** MySQL 8.0.30 masih tersedia di Laragon (`C:\laragon\bin\mysql\mysql-8.0.30-winx64\`, port 3306) untuk kompatibilitas, namun tidak digunakan oleh proyek ini. Seluruh environment menggunakan PostgreSQL.
+**Note:** MySQL 8.0.30 is still available in Laragon (`C:\laragon\bin\mysql\mysql-8.0.30-winx64\`, port 3306) for compatibility, but is not used by this project. The entire environment uses PostgreSQL.
 
-### Instalasi PostgreSQL di Laragon
+### PostgreSQL Installation in Laragon
 
-1. Download PostgreSQL zip dari [EnterpriseDB](https://www.enterprisedb.com/download-postgresql-binaries) atau [PostgreSQL Windows](https://www.postgresql.org/download/windows/)
-2. Extract ke `C:\laragon\bin\postgresql\postgresql-16.x-winx64\`
-3. Tambahkan service PostgreSQL via Laragon: Menu > Tools > Service/Port > PostgreSQL
-4. Inisialisasi database cluster:
+1. Download PostgreSQL zip from [EnterpriseDB](https://www.enterprisedb.com/download-postgresql-binaries) or [PostgreSQL Windows](https://www.postgresql.org/download/windows/)
+2. Extract to `C:\laragon\bin\postgresql\postgresql-16.x-winx64\`
+3. Add PostgreSQL service via Laragon: Menu > Tools > Service/Port > PostgreSQL
+4. Initialize database cluster:
    ```bash
    "C:\laragon\bin\postgresql\postgresql-16.x-winx64\bin\initdb.exe" -D "C:/laragon/data/postgresql-16" --username=postgres
    ```
-5. Jalankan PostgreSQL dari Laragon
+5. Start PostgreSQL from Laragon
 
-### Tools Lain
+### Other Tools
 
-| Tool | Versi | Path |
+| Tool | Version | Path |
 |---|---|---|---|
 | Node.js | 22.14.0 | `C:\laragon\bin\nodejs\node-v22.14.0-win-x64\` |
 | **Bun** | **latest** | `C:\Users\<user>\.bun\bin\bun.exe` (install: `powershell -c "irm bun.sh/install.ps1 | iex"`) |
 | Composer | latest (portable) | `C:\laragon\bin\composer\composer.phar` |
 | Redis | 5.0.14.1 | `C:\laragon\bin\redis\redis-x64-5.0.14.1\` |
 | Memcached | 1.6.8 | `C:\laragon\bin\memcached\memcached-1.6.8-win64-mingw\` |
-| pgAdmin / DBeaver | latest | GUI tools untuk PostgreSQL |
+| pgAdmin / DBeaver | latest | GUI tools for PostgreSQL |
 | Git | (via Windows PATH) | `C:\Program Files\Git\cmd\git.EXE` |
 | GitHub CLI | 2.95.0 | `gh` |
 
-> **Catatan:** Gunakan **Bun** untuk package management frontend (bukan npm). Bun lebih cepat, built-in TypeScript support, dan kompatibel dengan Vite 8.
+> **Note:** Use **Bun** for frontend package management (not npm). Bun is faster, has built-in TypeScript support, and is compatible with Vite 8.
 
 ---
 
-## Proyek yang Ada di Document Root
+## Projects in Document Root
 
-Semua proyek di `C:\laragon\www` otomatis mendapatkan virtual host dengan domain `.test`:
+All projects in `C:\laragon\www` automatically get a virtual host with `.test` domain:
 
-| Domain | Folder | Deskripsi |
+| Domain | Folder | Description |
 |---|---|---|
-| `smauii-core.test` | `smauii-core` | Backend Laravel SMART Absen |
-| `smauii-aksesekolah.test` | `smauii-aksesekolah` | Monorepo entrypoint (repositori ini) |
+| `smauii-core.test` | `smauii-core` | SMART Absen Laravel Backend |
+| `smauii-aksesekolah.test` | `smauii-aksesekolah` | Monorepo entrypoint (this repository) |
 
 ---
 
-## Setup Lingkungan untuk Developer Baru
+## Environment Setup for New Developers
 
-### 1. Instal Laragon
+### 1. Install Laragon
 
-1. Unduh Laragon dari [https://laragon.org/download](https://laragon.org/download) (versi **Full** direkomendasikan)
-2. Install ke `C:\laragon` (pastikan tidak ada spasi di path)
-3. Jalankan Laragon, pastikan Apache + PostgreSQL menyala (tombol **Start All**)
+1. Download Laragon from [https://laragon.org/download](https://laragon.org/download) (**Full** version recommended)
+2. Install to `C:\laragon` (make sure there are no spaces in the path)
+3. Run Laragon, make sure Apache + PostgreSQL are running (**Start All** button)
 
-### 2. Clone Repositori
+### 2. Clone Repositories
 
 ```bash
 # Clone monorepo
 cd C:\laragon\www
 git clone git@github.com:SMA-UII-Yogyakarta/aksesekolah.git smauii-aksesekolah
 
-# Clone backend core (untuk development harian)
+# Clone backend core (for daily development)
 git clone git@github.com:SMA-UII-Yogyakarta/core.git smauii-core
 ```
 
-### 3. Setup Bun (Package Manager Frontend)
+### 3. Setup Bun (Frontend Package Manager)
 
 ```bash
 # Install Bun (Windows PowerShell)
 powershell -c "irm bun.sh/install.ps1 | iex"
 
-# Verifikasi
+# Verify
 bun --version
 ```
 
@@ -145,21 +145,21 @@ cd C:\laragon\www\smauii-core
 # Install PHP dependencies
 composer install
 
-# Install JS/TS dependencies (via Bun, bukan npm!)
+# Install JS/TS dependencies (via Bun, not npm!)
 bun install
 
 # Copy environment
 cp .env.example .env
-# (sesuaikan konfigurasi database, lihat .env di bawah)
+# (adjust database configuration, see .env below)
 
 # Generate APP_KEY
 php artisan key:generate
 
 # Setup database
-# Buat database smauii_core via pgAdmin / DBeaver, atau:
-php artisan db:create  # (jika pakai package db-tools)
+# Create smauii_core database via pgAdmin / DBeaver, or:
+php artisan db:create  # (if using db-tools package)
 
-# Jalankan migrasi
+# Run migrations
 php artisan migrate --seed
 
 # Install Laravel Sanctum (token management)
@@ -169,20 +169,20 @@ php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 ```
 
-### 5. Inisialisasi Submodule Monorepo
+### 5. Initialize Monorepo Submodule
 
 ```bash
 cd C:\laragon\www\smauii-aksesekolah
 
-# Init repositori
+# Init repository
 git init
 git remote add origin git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
 
-# Jika submodule backend sudah terdaftar:
+# If backend submodule is already registered:
 git submodule update --init --recursive
 ```
 
-### 6. Konfigurasi .env (Backend)
+### 6. .env Configuration (Backend)
 
 ```env
 APP_NAME="SMAUII Core"
@@ -198,7 +198,7 @@ DB_DATABASE=smauii_core
 DB_USERNAME=postgres
 DB_PASSWORD=
 
-# Production (NeonDB) — uncomment saat deploy
+# Production (NeonDB) — uncomment when deploying
 # DB_HOST=ep-xxx-xxxx.us-east-2.aws.neon.tech
 # DB_PORT=5432
 # DB_DATABASE=smauii_production
@@ -211,17 +211,17 @@ QUEUE_CONNECTION=database
 CACHE_STORE=database
 ```
 
-### 7. Konfigurasi Virtual Host
+### 7. Virtual Host Configuration
 
-Laragon akan otomatis membuat virtual host `smauii-core.test` saat folder `smauii-core` terdeteksi.
-Namun, Laravel memerlukan `DocumentRoot` mengarah ke `public/`. Jika terjadi *directory listing*,
-sesuaikan file di:
+Laragon will automatically create the virtual host `smauii-core.test` when the `smauii-core` folder is detected.
+However, Laravel requires `DocumentRoot` to point to `public/`. If directory listing occurs,
+adjust the file at:
 
 ```
 C:\laragon\etc\apache2\sites-enabled\auto.smauii-core.test.conf
 ```
 
-Pastikan `DocumentRoot` dan `<Directory>` mengarah ke `.../smauii-core/public`:
+Make sure `DocumentRoot` and `<Directory>` point to `.../smauii-core/public`:
 
 ```apache
 <VirtualHost *:80>
@@ -235,54 +235,54 @@ Pastikan `DocumentRoot` dan `<Directory>` mengarah ke `.../smauii-core/public`:
 </VirtualHost>
 ```
 
-Setelah diubah, restart Apache dari menu Laragon.
+After changing, restart Apache from the Laragon menu.
 
-### 8. Verifikasi
+### 8. Verification
 
-- Buka `http://smauii-core.test` — seharusnya menampilkan halaman selamat datang Laravel
-- Buka `http://smauii-aksesekolah.test` — seharusnya menampilkan dokumentasi
+- Open `http://smauii-core.test` — should display the Laravel welcome page
+- Open `http://smauii-aksesekolah.test` — should display the documentation
 
 ---
 
 ## SSH & GitHub Authentication
 
-Developer harus memiliki akses SSH ke GitHub组织 `SMA-UII-Yogyakarta`.
+Developers must have SSH access to the GitHub organization `SMA-UII-Yogyakarta`.
 
-### Setup SSH Key
+### SSH Key Setup
 
 ```bash
-# Generate SSH key (jika belum punya)
-ssh-keygen -t ed25519 -C "email@anda.com"
+# Generate SSH key (if you don't have one)
+ssh-keygen -t ed25519 -C "your@email.com"
 
-# Lihat public key
+# View public key
 cat ~/.ssh/id_ed25519.pub
 ```
 
-Tambahkan public key ke GitHub:
-1. Buka https://github.com/settings/keys
-2. Klik **New SSH Key**
-3. Tempel public key
+Add the public key to GitHub:
+1. Open https://github.com/settings/keys
+2. Click **New SSH Key**
+3. Paste the public key
 
-### Login GitHub CLI
+### GitHub CLI Login
 
 ```bash
 gh auth login
-# Pilih: GitHub.com
-# Pilih: SSH
-# Upload SSH key ke akun GitHub
+# Select: GitHub.com
+# Select: SSH
+# Upload SSH key to GitHub account
 ```
 
 ---
 
 ## Troubleshooting
 
-| Masalah | Solusi |
+| Problem | Solution |
 |---|---|
-| **Directory listing** saat buka `smauii-core.test` | DocumentRoot belum diarahkan ke `/public` — ikuti langkah 6 di atas |
-| **PostgreSQL connection refused** | Pastikan PostgreSQL menyala di Laragon (Menu > Tools > Service/Port > PostgreSQL) |
-| **pdo_pgsql not found** | Pastikan PHP 8.4 punya ekstensi pdo_pgsql dan pgsql (cek `php -m`). Tambahkan `extension=pdo_pgsql` di php.ini jika belum. |
-| **Composer not found** | Gunakan `C:\laragon\bin\composer\composer.bat` atau langsung `php C:\laragon\bin\composer\composer.phar` |
-| **Bun command not found** | Pastikan Bun terinstal: `bun --version`. Install: `powershell -c "irm bun.sh/install.ps1 | iex"` |
-| **Port 80/5432 sudah dipakai** | Cek aplikasi lain (Skype, Docker, IIS) yang menggunakan port tersebut |
-| **APP_KEY not set** | Jalankan `php artisan key:generate` |
-| **Bun install gagal di Windows** | Coba jalankan PowerShell sebagai Administrator, atau install ulang: `powershell -c "irm bun.sh/install.ps1 | iex"` |
+| **Directory listing** when opening `smauii-core.test` | DocumentRoot is not pointed to `/public` — follow step 6 above |
+| **PostgreSQL connection refused** | Make sure PostgreSQL is running in Laragon (Menu > Tools > Service/Port > PostgreSQL) |
+| **pdo_pgsql not found** | Make sure PHP 8.4 has pdo_pgsql and pgsql extensions (check `php -m`). Add `extension=pdo_pgsql` to php.ini if missing. |
+| **Composer not found** | Use `C:\laragon\bin\composer\composer.bat` or directly `php C:\laragon\bin\composer\composer.phar` |
+| **Bun command not found** | Make sure Bun is installed: `bun --version`. Install: `powershell -c "irm bun.sh/install.ps1 | iex"` |
+| **Port 80/5432 already in use** | Check other applications (Skype, Docker, IIS) using that port |
+| **APP_KEY not set** | Run `php artisan key:generate` |
+| **Bun install fails on Windows** | Try running PowerShell as Administrator, or reinstall: `powershell -c "irm bun.sh/install.ps1 | iex"` |

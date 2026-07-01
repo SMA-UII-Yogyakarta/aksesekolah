@@ -9,19 +9,19 @@
   "references": {
     "docs": {
       "path": "docs",
-      "description": "Dokumentasi teknis SMART Absen — arsitektur, ERD, deployment, alur flow"
+      "description": "Technical documentation for SMART Absen — architecture, ERD, deployment, flow"
     },
     "brief": {
       "path": "brief",
-      "description": "Dokumen perencanaan awal — analisis kebutuhan, proposal, ERD"
+      "description": "Initial planning documents — requirements analysis, proposal, ERD"
     },
     "opencode": {
       "path": ".opencode",
-      "description": "Konfigurasi opencode & aturan AI Agent"
+      "description": "opencode config & AI Agent rules"
     },
     "openkb": {
       "path": ".openkb",
-      "description": "Knowledge base personal & shared — glossary, referensi, log keputusan"
+      "description": "Personal & shared knowledge base — glossary, references, decision log"
     },
     "playbook": {
       "path": "../../smauii-playbook",
@@ -34,7 +34,7 @@
   },
   "agent": {
     "build": {
-      "description": "Agent utama — eksekusi coding, dokumentasi, debugging",
+      "description": "Primary agent — coding, documentation, debugging",
       "mode": "primary",
       "permission": {
         "edit": "allow",
@@ -42,48 +42,48 @@
       }
     },
     "plan": {
-      "description": "Agent perencanaan — analisis, arsitektur, design sebelum coding",
+      "description": "Planning agent — analysis, architecture, design before coding",
       "mode": "primary",
       "permission": {
         "edit": "deny"
       }
     },
     "review": {
-      "description": "Code review agent — periksa PR, coding style, keamanan",
+      "description": "Code review agent — check PRs, coding style, security",
       "mode": "subagent",
       "model": "anthropic/claude-sonnet-4-6",
       "permission": {
         "edit": "deny",
         "bash": "deny"
       },
-      "prompt": "Kamu adalah reviewer kode senior untuk proyek SMART Absen SMA UII. Review kode berdasarkan: 1) PSR-12 / Laravel Pint, 2) Keamanan (SQL injection, XSS), 3) Kinerja (N+1 query), 4) Konsistensi dengan arsitektur yang sudah ada. Berikan review dalam bahasa Indonesia."
+      "prompt": "You are a senior code reviewer for the SMART Absen SMA UII project. Review code based on: 1) PSR-12 / Laravel Pint, 2) Security (SQL injection, XSS), 3) Performance (N+1 query), 4) Consistency with existing architecture. Provide reviews in English."
     },
     "docs": {
-      "description": "Dokumentasi agent — buat & perbaiki dokumentasi teknis",
+      "description": "Documentation agent — create & improve technical docs",
       "mode": "subagent",
       "model": "anthropic/claude-sonnet-4-6",
       "permission": {
         "edit": "allow",
         "bash": "deny"
       },
-      "prompt": "Kamu adalah technical writer untuk SMART Absen SMA UII. Buat dokumentasi yang jelas, terstruktur, dan mudah dipahami oleh tim teknis maupun non-teknis. Gunakan bahasa Indonesia. Patuhi struktur markdown yang konsisten."
+      "prompt": "You are a technical writer for SMART Absen SMA UII. Create clear, structured documentation that is easy to understand for both technical and non-technical teams. Use English. Follow consistent markdown structure."
     }
   },
   "command": {
     "test": {
-      "description": "Jalankan PHPUnit test",
+      "description": "Run PHPUnit tests",
       "template": "php artisan test $ARGUMENTS"
     },
     "lint": {
-      "description": "Cek coding style dengan Laravel Pint",
+      "description": "Check coding style with Laravel Pint",
       "template": "./vendor/bin/pint --test"
     },
     "fix": {
-      "description": "Perbaiki coding style otomatis",
+      "description": "Fix coding style automatically",
       "template": "./vendor/bin/pint"
     },
     "migrate": {
-      "description": "Jalankan migrasi database",
+      "description": "Run database migrations",
       "template": "php artisan migrate $ARGUMENTS"
     },
     "fresh": {
@@ -91,23 +91,23 @@
       "template": "php artisan migrate:fresh --seed"
     },
     "make": {
-      "description": "Buat file Laravel (model, controller, migration, dll)",
+      "description": "Create Laravel files (model, controller, migration, etc.)",
       "template": "php artisan make:$ARGUMENTS"
     },
     "kaede-today": {
-      "description": "Tampilkan task Trello hari ini",
+      "description": "Show today's Trello tasks",
       "template": "kaede today"
     },
     "kaede-status": {
-      "description": "Cek status koneksi KAEDE & Trello",
+      "description": "Check KAEDE & Trello connection status",
       "template": "kaede status --mcp"
     },
     "kaede-run": {
-      "description": "Eksekusi intent ke Trello (butuh --playbook & board)",
+      "description": "Execute intent to Trello (needs --playbook & board)",
       "template": "kaede run --playbook '../smauii-playbook' --board $ARGUMENTS"
     },
     "kaede-orchestrate": {
-      "description": "Muat konteks playbook",
+      "description": "Load playbook context",
       "template": "kaede orchestrate --playbook '../smauii-playbook' $ARGUMENTS"
     }
   }

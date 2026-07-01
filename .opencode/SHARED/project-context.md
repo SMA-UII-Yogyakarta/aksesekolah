@@ -1,10 +1,10 @@
 # Project Context — SMART Absen SMA UII
 
-## Ringkasan
-Sistem presensi digital SMA UII Yogyakarta berbasis web dengan geolokasi, swafoto kamera, dan SSO. Dikembangkan oleh PT Koneksi Jaringan Indonesia.
+## Summary
+Web-based attendance system for SMA UII Yogyakarta with geolocation, camera selfie, and SSO. Developed by PT Koneksi Jaringan Indonesia.
 
 ## Tech Stack
-- **Backend**: PHP 8.4 / Laravel 13 — repositori: `core.git`
+- **Backend**: PHP 8.4 / Laravel 13 — repository: `core.git`
 - **Frontend**: InertiaJS 3 + React 19 + TypeScript 5.7 + Tailwind CSS 4 + Vite 8
 - **Package Manager**: Bun (frontend), Composer (backend)
 - **Database**: PostgreSQL 16 via NeonDB (production), PostgreSQL 16 (local), SQLite (testing)
@@ -13,33 +13,33 @@ Sistem presensi digital SMA UII Yogyakarta berbasis web dengan geolokasi, swafot
 - **Web Server**: Apache (dev) / Nginx (production)
 - **Auth**: Laravel Sanctum + Spatie Laravel Permission (RBAC)
 
-## Arsitektur
+## Architecture
 ```
 aksesekolah.git (monorepo entrypoint)
 ├── apps/backend/ → submodule → core.git
-├── brief/        → dokumen perencanaan
-├── docs/         → dokumentasi teknis
-├── .opencode/    → konfigurasi opencode
+├── brief/        → planning documents
+├── docs/         → technical documentation
+├── .opencode/    → opencode configuration
 └── .openkb/      → knowledge base
 ```
 
-## Tim
-| Person | Role | Repo Fokus |
+## Team
+| Person | Role | Repo Focus |
 |---|---|---|
-| sandikodev | Project Manager | Semua repo |
+| sandikodev | Project Manager | All repos |
 | Ahmad Hanif Hasan | Product Analyst | brief/, docs/ |
 | Fathan Mubina | Junior Frontend Developer | core.git (Inertia+React) |
 | Ihsan | Junior Backend Developer | core.git (Laravel API) |
 | Azis | Learning Mentor | core.git, playbook (mentoring) |
 
-## Database (10 tabel)
-- **Master**: users, siswa, guru, wali_murid, kelas
-- **Transaksi**: presensi, pengajuan_izin, jadwal_piket
-- **Konfigurasi**: pengaturan_jam_presensi, kalender_akademik
+## Database (10 tables)
+- **Master**: users, students, teachers, guardians, school_classes
+- **Transaction**: attendances, leave_requests, duty_schedules
+- **Configuration**: attendance_time_settings, academic_calendars
 
-## Aturan Penting
-1. Semua perubahan `main` harus via PR dengan minimal 1 review
-2. Commit menggunakan Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`)
+## Important Rules
+1. All `main` changes must go through PR with at least 1 review
+2. Commit using Conventional Commits (`feat:`, `fix:`, `docs:`, `chore:`)
 3. Coding style: PSR-12 (Laravel Pint)
-4. Test harus hijau sebelum merge
-5. Kredit milik PT Koneksi Jaringan Indonesia — dilarang memperjualbelikan source code
+4. Tests must be green before merge
+5. Credit belongs to PT Koneksi Jaringan Indonesia — selling or redistributing the source code is prohibited

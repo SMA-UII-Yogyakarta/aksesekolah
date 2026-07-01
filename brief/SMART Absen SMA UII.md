@@ -1,102 +1,103 @@
-**1\. Alur Program (Skenario Pengguna)**  
-Sistem ini menggunakan alur berbasis peran (*Role-Based Access Control*) dengan pintu masuk tunggal melalui SSO.
+**1\. Program Flow (User Scenario)**  
+This system uses Role-Based Access Control with a single entry point through SSO.
 
-* **Pintu Masuk (SSO Login):** Semua pengguna (Admin, Guru, Siswa, Wali Murid) masuk melalui satu portal login institusi. Sistem akan otomatis mendeteksi peran pengguna dan mengarahkan mereka ke *dashboard* masing-masing.  
-* **Alur Murid:** Login \=\> Buka menu Presensi \=\> Sistem meminta akses Kamera & Lokasi \=\> Ambil swafoto \=\> Sistem mencatat waktu & koordinat \=\> Selesai.  
-* **Alur Wali Murid:** Login \=\> Buka Dashboard untuk melihat grafik kehadiran anak \=\> Jika anak berhalangan, buka menu Pengajuan Izin \=\> Isi form (Sakit/Acara/Lomba), durasi, dan unggah bukti/surat \=\> Kirim pengajuan.  
-* **Alur Wali Kelas:** Login \=\> Buka notifikasi izin masuk \=\> Verifikasi dan Update status izin siswa \=\> Pantau rekap harian kelas yang diampunya.  
-* **Alur Guru Piket:** Login \=\> Buka menu Monitoring Harian \=\> Filter berdasarkan kelas yang sedang dipantau \=\> Lihat daftar siswa yang belum presensi/absen.  
-* **Alur Admin:** Login \=\> Mengelola data master (Siswa, Guru, Wali, Kelas) secara *bulk* maupun satuan \=\> Mengelola rekap kehadiran dan izin secara penuh \=\> Menetapkan jadwal buka/tutup gerbang presensi digital dan mendaftarkan kalender libur akademik.
+* **Entry Point (SSO Login):** All users (Admin, Teacher, Student, Guardian) log in through a single institutional login portal. The system will automatically detect the user's role and redirect them to their respective dashboard.  
+* **Student Flow:** Login => Open Attendance menu => System requests Camera & Location access => Take a selfie => System records time & coordinates => Done.  
+* **Guardian Flow:** Login => Open Dashboard to view child's attendance chart => If child is absent, open Leave Request menu => Fill form (Sick/Event/Competition), duration, and upload evidence/letter => Submit request.  
+* **Homeroom Teacher Flow:** Login => Open leave notification inbox => Verify and Update student leave status => Monitor daily recap of their assigned class.  
+* **Duty Teacher Flow:** Login => Open Daily Monitoring menu => Filter by class being monitored => View list of students who haven't attended/are absent.  
+* **Admin Flow:** Login => Manage master data (Students, Teachers, Guardians, Classes) in bulk or individually => Manage attendance and leave records fully => Set digital attendance gate open/close schedule and register academic holiday calendar.
 
-**2\. Jumlah Total Interface (Antarmuka)**  
-Aplikasi akan memiliki rancangan desain responsif (berjalan optimal di Mobile & Desktop) dengan total sekitar 13 Antarmuka Utama:
+**2\. Total Number of Interfaces**  
+The application will have a responsive design (optimized for Mobile & Desktop) with approximately 13 Main Interfaces:
 
-* **Halaman Login Universal:** Portal utama integrasi SSO.  
-* **Dashboard Admin:** Ringkasan statistik sekolah (total presensi hari ini, grafik absensi).  
-* **Manajemen Data Master (Admin):** Modul CRUD untuk data Siswa, Guru, dan Wali Murid (termasuk fitur *Upload/Download Excel* untuk *bulk data*).  
-* **Manajemen Kelas & Enrolment (Admin):** Interface untuk memetakan Wali Kelas dan memasukkan siswa ke kelas masing-masing.  
-* **Pengaturan Waktu & Libur (Admin):** Antarmuka khusus untuk mengatur jam buka, batas terlambat, jam tutup presensi harian, serta mendaftarkan tanggal merah/hari libur akademik.  
-* **Dashboard Siswa:** Ringkasan kehadiran pribadi.  
-* **Form Presensi Live (Siswa):** Halaman khusus memuat antarmuka kamera (*viewfinder*) dan peta geolokasi.  
-* **Dashboard Wali Murid:** Laporan presensi spesifik untuk putra/putrinya.  
-* **Form Pengajuan Izin (Wali Murid):** Form input data izin beserta fitur unggah *file*.  
-* **Dashboard Wali Kelas:** Laporan absensi khusus untuk satu kelas.  
-* **Panel Verifikasi Izin (Wali Kelas):** Antarmuka untuk menyetujui/menolak izin dari Wali Murid.  
-* **Dashboard Guru Piket:** Layar monitoring presensi *real-time* dengan *filter* kelas/hari.  
-* **Laporan & Export (Global):** Antarmuka khusus untuk mencetak rekap Harian/Bulanan/Semester ke format PDF/Excel (bisa diakses Admin, Wali Kelas, dan Guru Piket).
+* **Universal Login Page:** Primary portal for SSO integration.  
+* **Admin Dashboard:** School statistics summary (today's total attendance, absence chart).  
+* **Master Data Management (Admin):** CRUD module for Student, Teacher, and Guardian data (including Excel Upload/Download for bulk data).  
+* **Class & Enrolment Management (Admin):** Interface for mapping Homeroom Teachers and enrolling students into their respective classes.  
+* **Time & Holiday Settings (Admin):** Dedicated interface for setting opening time, late threshold, daily attendance closing time, and registering red dates/academic holidays.  
+* **Student Dashboard:** Personal attendance summary.  
+* **Live Attendance Form (Student):** Dedicated page with camera viewfinder and geolocation map.  
+* **Guardian Dashboard:** Attendance report specific to their child/children.  
+* **Leave Request Form (Guardian):** Leave request input form with file upload feature.  
+* **Homeroom Teacher Dashboard:** Attendance report specific to one class.  
+* **Leave Verification Panel (Homeroom Teacher):** Interface for approving/rejecting leave requests from Guardians.  
+* **Duty Teacher Dashboard:** Real-time attendance monitoring screen with class/day filter.  
+* **Reports & Export (Global):** Dedicated interface for printing Daily/Monthly/Semester recaps to PDF/Excel format (accessible by Admin, Homeroom Teacher, and Duty Teacher).
 
-**3\. Tools di Setiap Interface**
+**3\. Tools in Each Interface**
 
-* **Form Presensi Live:** Menggunakan HTML5 *Geolocation API* untuk mendapatkan titik koordinat (Latitude/Longitude) dan *WebRTC/MediaDevices API* untuk mengambil foto langsung dari kamera perangkat (menghindari unggah foto dari galeri).  
-* **Manajemen Data Master:** Menggunakan *library DataTables* untuk fitur *search, sort*, dan *pagination* data yang besar, serta *tools parser* untuk *import/export bulk data*.  
-* **Dashboard & Rekap:** Menggunakan pustaka visualisasi data (seperti *Chart.js* atau *ApexCharts*) untuk menampilkan grafik tren kehadiran.  
-* **Form Izin:** Komponen *File Uploader* dengan validasi tipe dokumen (JPG, PNG, PDF) dan batasan ukuran *file*.  
-* **Frontend Image Compression:** Implementasi fungsi kompresi gambar berbasis JavaScript (*Canvas API*) pada antarmuka *Form Presensi Live* untuk mengecilkan ukuran swafoto hingga maksimal 200 KB tepat sebelum dikirim ke *server*.  
-* **External Object Storage (S3 Protocol):** Sistem akan menggunakan cloud storage terpisah yang kompatibel dengan protokol S3 khusus untuk menyimpan fail media statis. Ini mencakup fail foto absensi serta unggahan bukti surat pada Form Pengajuan Izin.
+* **Live Attendance Form:** Uses HTML5 Geolocation API to obtain coordinate points (Latitude/Longitude) and WebRTC/MediaDevices API to capture photos directly from the device camera (preventing photo upload from gallery).  
+* **Master Data Management:** Uses DataTables library for search, sort, and pagination of large data, along with parser tools for bulk data import/export.  
+* **Dashboard & Reports:** Uses data visualization libraries (such as Chart.js or ApexCharts) to display attendance trend charts.  
+* **Leave Form:** File Uploader component with document type validation (JPG, PNG, PDF) and file size limits.  
+* **Frontend Image Compression:** Implementation of JavaScript-based image compression (Canvas API) on the Live Attendance Form interface to reduce selfie size to a maximum of 200 KB just before sending to the server.  
+* **External Object Storage (S3 Protocol):** The system will use separate S3-compatible cloud storage specifically for storing static media files. This includes attendance photo files and uploaded document evidence on the Leave Request Form.
 
-**4\. Spesifikasi Infrastruktur & Kinerja (Performance)**
+**4\. Infrastructure & Performance Specifications**
 
-* **Target Konkurensi (CCU):** Infrastruktur peladen (*server*) berbasis VPS (*Virtual Private Server*) HARUS MAMPU dan dioptimalkan untuk melayani antrean hingga 750 pengguna bersamaan (*Concurrent Users*) selama rentang waktu kritis presensi pagi (06:30 \- 07:00 WIB) tanpa mengalami *Gateway Timeout*.  
-* **Optimasi Basis Data Berbasis Index:** Mesin basis data utama (MySQL/PostgreSQL) diwajibkan menggunakan struktur *Database Indexing* pada kolom-kolom relasional dan pencarian utama (seperti id\_siswa, tanggal, dan status\_kehadiran).  
-* **Pemisahan Beban Basis Data (Storage Offloading):** Basis data dilarang keras menyimpan fail gambar dalam bentuk tipe data BLOB atau *string LongText* (Base64). Basis data murni difungsikan untuk menyimpan URL yang menunjuk ke lokasi fail di Object Storage eksternal.
+* **Concurrent User (CCU) Target:** The server infrastructure (VPS) MUST BE ABLE and optimized to serve queues of up to 750 concurrent users during the critical morning attendance period (06:30 \- 07:00 AM WIB) without experiencing Gateway Timeout.  
+* **Index-Based Database Optimization:** The main database engine (MySQL/PostgreSQL) must use Database Indexing on relational and primary search columns (such as student_id, date, and attendance_status).  
+* **Database Storage Offloading:** The database is strictly prohibited from storing image files as BLOB or LongText (Base64) data types. The database is purely used to store URLs pointing to file locations in the external Object Storage.
 
-**5\. Keamanan Logika & Pembatasan Waktu (Time Geofencing)**
+**5\. Logic Security & Time Geofencing**
 
-* **Konfigurasi Dinamis (Anti-Hardcode):** Sistem tidak diperkenankan menggunakan logika waktu statis (*hardcode*) di dalam *source code*. Seluruh jam buka, jam tutup, dan batas keterlambatan harus ditarik dari tabel basis data pengaturan\_jam\_presensi agar fleksibel terhadap perubahan jadwal sekolah.  
-* **Validasi Tiga Lapis (Triple-Layer Validation):** Sebelum menyimpan data kehadiran, *backend* wajib melakukan tiga lapis pengecekan:  
-  1. *Validasi Kalender Akademik:* Menolak presensi jika tanggal sistem cocok dengan data hari libur di tabel kalender\_akademik.  
-  2. *Validasi Hari Aktif:* Menolak presensi pada akhir pekan (Sabtu/Minggu), kecuali diatur aktif oleh Admin.  
-  3. *Validasi Rentang Jam:* Menolak akses jika belum masuk jam buka, merekam 'Hadir' jika tepat waktu, merekam 'Terlambat' jika melewati batas toleransi, dan mengunci akses (*Disabled*) jika melewati jam tutup operasional.
+* **Dynamic Configuration (Anti-Hardcode):** The system is not permitted to use static time logic (hardcoded) in the source code. All opening times, closing times, and late thresholds must be pulled from the attendance_time_settings database table to remain flexible to school schedule changes.  
+* **Triple-Layer Validation:** Before saving attendance data, the backend must perform three layers of validation:  
+  1. *Academic Calendar Validation:* Reject attendance if the system date matches holiday data in the academic_calendars table.  
+  2. *Active Day Validation:* Reject attendance on weekends (Saturday/Sunday), unless set as active by Admin.  
+  3. *Time Range Validation:* Reject access if before opening time, record 'Present' if on time, record 'Late' if beyond the tolerance threshold, and lock access (Disabled) if past operational closing time.
 
-**6\. Kelebihan & Kekurangan (Web-Based vs Native App)**
+**6\. Advantages & Disadvantages (Web-Based vs Native App)**
 
-* **Kelebihan Web-Based (Mobile Responsive):**  
-  * **Tanpa Instalasi:** Pengguna tidak perlu mengunduh aplikasi dari Play Store/App Store yang memakan memori internal *smartphone*. Cukup buka *browser* dan masuk via SSO.  
-  * **Pembaruan Instan:** Setiap ada perbaikan atau fitur baru, pengguna langsung mendapatkan versi terbaru tanpa perlu melakukan *update* aplikasi.  
-* **Kekurangan:**  
-  * **Ketergantungan Browser & Internet:** Tidak memiliki mode *offline* yang sekuat aplikasi *native*. Jika sinyal internet terputus saat mengambil geolokasi, presensi bisa gagal submit.  
-  * **Izin Perangkat (Permissions):** Terkadang pengguna awam secara tidak sengaja memblokir izin akses lokasi/kamera di *browser* mereka, sehingga membutuhkan edukasi tambahan.**6\. Rencana Anggaran Biaya**
+* **Advantages of Web-Based (Mobile Responsive):**  
+  * **No Installation:** Users do not need to download an app from Play Store/App Store that consumes smartphone internal memory. Just open a browser and log in via SSO.  
+  * **Instant Updates:** Every fix or new feature is immediately available without needing to update the app.  
+* **Disadvantages:**  
+  * **Browser & Internet Dependence:** No offline mode as strong as native apps. If the internet signal is lost while capturing geolocation, attendance submission may fail.  
+  * **Device Permissions:** Inexperienced users may accidentally block location/camera access permissions in their browser, requiring additional education.
 
-| Komponen Pengerjaan | Deskripsi Singkat | Estimasi Biaya |
+**6\. Budget Plan**
+
+| Component | Description | Estimated Cost |
 | :---- | :---- | :---- |
-| **Arsitektur Database & SSO** | Perancangan ERD, relasi multi-user, dan pembuatan fondasi login SSO mandiri. | Rp 1.800.000 |
-| **Modul Presensi Utama** | Pengembangan fitur akses kamera (swafoto) dan penguncian titik koordinat (GPS) siswa. | Rp 1.500.000 |
-| **Modul Admin & Master Data** | Pembuatan antarmuka CRUD (termasuk fitur import/export Excel) untuk data Siswa, Guru, dan Kelas. | Rp 1.000.000 |
-| **Modul Guru Piket & Wali Kelas** | Pembuatan filter monitoring real-time, sistem verifikasi izin, dan rekap kelas. | Rp 1.000.000 |
-| **Modul UI/UX Siswa & Wali Murid** | Pembuatan dashboard responsif, grafik kehadiran, dan form pengajuan izin. | Rp 1.150.000 |
-| **Sewa *Object Storage Eksternal*** | Sewa Object Storage Eksternal (Kapasitas 50 GB \- 250 GB) Tahunan | Rp 850.000 |
-| **Setup & Deployment Server Internal** | Konfigurasi, instalasi database, dan deployment aplikasi ke server mandiri milik sekolah. | Rp 1.200.000 |
-| **TOTAL ESTIMASI** |  | **Rp 8.500.000** |
+| **Database Architecture & SSO** | ERD design, multi-user relations, and building a standalone SSO login foundation. | Rp 1,800,000 |
+| **Main Attendance Module** | Development of camera access (selfie) and GPS coordinate locking features for students. | Rp 1,500,000 |
+| **Admin & Master Data Module** | Creation of CRUD interface (including Excel import/export) for Student, Teacher, and Class data. | Rp 1,000,000 |
+| **Duty Teacher & Homeroom Teacher Module** | Creation of real-time monitoring filter, leave verification system, and class recap. | Rp 1,000,000 |
+| **Student & Guardian UI/UX Module** | Creation of responsive dashboard, attendance charts, and leave request form. | Rp 1,150,000 |
+| **External Object Storage Rental** | Annual External Object Storage rental (50 GB \- 250 GB capacity) | Rp 850,000 |
+| **Internal Server Setup & Deployment** | Configuration, database installation, and application deployment to the school's own server. | Rp 1,200,000 |
+| **TOTAL ESTIMATE** |  | **Rp 8,500,000** |
 
-### **7\. Timeline Pengerjaan (Target 8 Minggu / 2 Bulan)**
+### **7\. Timeline (Target 8 Weeks / 2 Months)**
 
-|                                                                                                                    Minggu Ke Pekerjaan | Minggu Ke 1 | Minggu Ke 2 | Minggu Ke 3 | Minggu Ke 4 | Minggu Ke 5 | Minggu Ke 6 | Minggu Ke 7 | Minggu Ke 8 |
+| Week | Week 1 | Week 2 | Week 3 | Week 4 | Week 5 | Week 6 | Week 7 | Week 8 |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
-| **Analisis Kebutuhan** |   |   |   |   |   |   |   |   |
-| **Wireframing (Desain UI/UX).** |   |   |   |   |   |   |   |   |
-| **Desain ERD Database** |   |   |   |   |   |   |   |   |
-| **Integrasi SSO** |   |   |   |   |   |   |   |   |
-| **Pengaturan Server/Environment** |   |   |   |   |   |   |   |   |
-| **Pembuatan Dashboard Admin (CRUD Master Data).** |   |   |   |   |   |   |   |   |
-| **Pengembangan Modul Kelas & Enrolment (Relasi Siswa, Guru, Wali Kelas)** |   |   |   |   |   |   |   |   |
-| **Presensi Siswa (Geolokasi & Kamera)** |  |  |  |  |  |  |  |  |
-| **Pengembangan Modul Guru Piket dan Verifikasi Wali Kelas.** |   |   |   |   |   |   |   |   |
-| **Penyatuan Sistem** |   |   |   |   |   |   |   |   |
-| **Pembuatan Fitur Laporan/Export (Harian/Bulanan/Semester).** |   |   |   |   |   |   |   |   |
+| **Requirements Analysis** |   |   |   |   |   |   |   |   |
+| **Wireframing (UI/UX Design)** |   |   |   |   |   |   |   |   |
+| **Database ERD Design** |   |   |   |   |   |   |   |   |
+| **SSO Integration** |   |   |   |   |   |   |   |   |
+| **Server/Environment Setup** |   |   |   |   |   |   |   |   |
+| **Admin Dashboard (Master Data CRUD)** |   |   |   |   |   |   |   |   |
+| **Class & Enrolment Module (Student, Teacher, Homeroom Relations)** |   |   |   |   |   |   |   |   |
+| **Student Attendance (Geolocation & Camera)** |  |  |  |  |  |  |  |  |
+| **Duty Teacher & Homeroom Verification Module** |   |   |   |   |   |   |   |   |
+| **System Integration** |   |   |   |   |   |   |   |   |
+| **Report/Export Features (Daily/Monthly/Semester)** |   |   |   |   |   |   |   |   |
 | **Internal Testing** |   |   |   |   |   |   |   |   |
-| **Optimalisasi Tampilan Mobile.** |   |   |   |   |   |   |   |   |
+| **Mobile Display Optimization** |   |   |   |   |   |   |   |   |
 | **Bug Fixing** |   |   |   |   |   |   |   |   |
 | **User Acceptance Testing (UAT)** |   |   |   |   |   |   |   |   |
-| **Deployment ke server produksi** |   |   |   |   |   |   |   |   |
-| **Pelatihan/Panduan Pengguna.** |   |   |   |   |   |   |   |   |
+| **Production Server Deployment** |   |   |   |   |   |   |   |   |
+| **User Training/Guide** |   |   |   |   |   |   |   |   |
 
 ### 
 
-### **8\. Kemungkinan Update di Masa Depan (*Future Roadmap*)**
+### **8\. Future Roadmap**
 
-Sistem presensi ini diproyeksikan sebagai fondasi awal transformasi digital terpusat bagi yayasan, dengan peta jalan pengembangan sebagai berikut:
+This attendance system is projected as the initial foundation for the foundation's centralized digital transformation, with the following development roadmap:
 
-* **Fase 1: Pembentukan SSO Yayasan Mandiri** Sistem *login* dari aplikasi ini akan dijadikan portal identitas utama (*Identity Provider*). Kedepannya, semua aplikasi sekolah (e-Learning, Keuangan, Perpustakaan) cukup menggunakan satu akun SSO dari sistem ini.  
-* **Fase 2: Tonggak "UII Satu Data"** Mewujudkan sentralisasi data untuk mencegah data ganda antar unit. Seluruh rekam jejak siswa dan guru (presensi, akademik, administrasi) akan terintegrasi pada satu ID.  
-* **Fase 3: Automasi & Teknologi Cerdas** *Geofencing* yang lebih ketat (pembatasan radius lokasi otomatis), dan *WhatsApp Gateway* untuk notifikasi absensi *real-time* ke wali murid.
-
+* **Phase 1: Independent Foundation SSO Establishment** The login system from this application will become the main identity portal (Identity Provider). Going forward, all school applications (e-Learning, Finance, Library) will use a single SSO account from this system.  
+* **Phase 2: "UII Satu Data" Milestone** Realizing data centralization to prevent duplicate data across units. All student and teacher records (attendance, academic, administrative) will be integrated under one ID.  
+* **Phase 3: Automation & Smart Technology** Tighter geofencing (automatic location radius restrictions), and WhatsApp Gateway for real-time attendance notifications to guardians.

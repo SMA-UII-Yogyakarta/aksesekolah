@@ -1,28 +1,28 @@
-# Decision Log — Catatan Keputusan Arsitektur
+# Decision Log — Architecture Decision Record
 
-Format setiap entri:
+Format for each entry:
 ```
-## YYYY-MM-DD — [Judul Keputusan]
+## YYYY-MM-DD — [Decision Title]
 
 **Status**: [Proposed / Accepted / Deprecated]
-**Pemutus**: [Nama]
-**Konteks**: [Latar belakang / masalah]
-**Keputusan**: [Apa yang diputuskan]
-**Konsekuensi**: [Dampak positif & negatif]
+**Decision Maker**: [Name]
+**Context**: [Background / problem]
+**Decision**: [What was decided]
+**Consequences**: [Positive & negative impacts]
 ```
 
 ---
 
-## 2026-06-22 — Arsitektur Monorepo dengan Git Submodules
+## 2026-06-22 — Monorepo Architecture with Git Submodules
 
 **Status**: Accepted
-**Pemutus**: sandikodev
-**Konteks**: Perlu memisahkan backend, frontend, dan mobile dalam satu organisasi GitHub tanpa mengikat mereka dalam satu repo monolitik.
-**Keputusan**: `aksesekolah.git` sebagai entrypoint monorepo, `core.git` sebagai submodule di `apps/backend`. Frontend (`webapp.git`) dan mobile (`flutter.git`) akan menyusul.
-**Konsekuensi**:
-- (+) Pemisahan concern yang jelas
-- (+) Setiap tim bisa kerja di repo masing-masing
-- (-) Submodule perlu disinkron manual (git submodule update)
-- (-) Developer baru perlu paham konsep submodule
+**Decision Maker**: sandikodev
+**Context**: Need to separate backend, frontend, and mobile within one GitHub organization without binding them in a single monolithic repository.
+**Decision**: `aksesekolah.git` as the monorepo entrypoint, `core.git` as a submodule in `apps/backend`. Frontend (`webapp.git`) and mobile (`flutter.git`) will follow.
+**Consequences**:
+- (+) Clear separation of concerns
+- (+) Each team can work in their own repository
+- (-) Submodules require manual synchronization (git submodule update)
+- (-) New developers need to understand the submodule concept
 
 ---

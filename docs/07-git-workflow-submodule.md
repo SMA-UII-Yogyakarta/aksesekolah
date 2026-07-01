@@ -1,8 +1,8 @@
-# Git Workflow & Manajemen Submodule
+# Git Workflow & Submodule Management
 
-## Filosofi Branching
+## Branching Philosophy
 
-Proyek ini menggunakan **Git Flow** yang disederhanakan dengan tiga branch utama:
+This project uses a simplified **Git Flow** with three main branches:
 
 ```
 main           ───●────────────────────●───────────►
@@ -12,64 +12,64 @@ develop          ──●──●──●──●──●──●──●
 feature/*        ──┘  └──┘  └──┘  └──┘  └──┘
 ```
 
-| Branch | Fungsi | Deploy |
+| Branch | Function | Deploy |
 |---|---|---|
-| `main` | Kode stabil, siap produksi | ✅ Ya |
-| `develop` | Integrasi fitur, pengembangan harian | ❌ Tidak |
-| `feature/*` | Fitur spesifik, branch dari `develop` | ❌ Tidak |
-| `hotfix/*` | Perbaikan darurat, branch dari `main` | ✅ Ya (setelah merge) |
+| `main` | Stable code, production-ready | ✅ Yes |
+| `develop` | Feature integration, daily development | ❌ No |
+| `feature/*` | Specific feature, branch from `develop` | ❌ No |
+| `hotfix/*` | Emergency fix, branch from `main` | ✅ Yes (after merge) |
 
 ---
 
-## Workflow Harian Developer
+## Daily Developer Workflow
 
-### 1. Memulai Fitur Baru
+### 1. Starting a New Feature
 
 ```bash
-# Pastikan develop terbaru
+# Make sure develop is up to date
 git checkout develop
 git pull origin develop
 
-# Buat branch fitur
-git checkout -b feature/nama-fitur
+# Create feature branch
+git checkout -b feature/feature-name
 
-# Kerja seperti biasa...
+# Work as usual...
 git add .
-git commit -m "feat: menambahkan fitur X"
+git commit -m "feat: adding feature X"
 ```
 
-### 2. Menyelesaikan Fitur
+### 2. Completing a Feature
 
 ```bash
-# Update branch fitur dengan develop terbaru
+# Update feature branch with latest develop
 git checkout develop
 git pull origin develop
-git checkout feature/nama-fitur
+git checkout feature/feature-name
 git rebase develop
 
-# Selesaikan konflik jika ada
-# Force push (hati-hati, hanya untuk branch sendiri!)
-git push origin feature/nama-fitur --force-with-lease
+# Resolve conflicts if any
+# Force push (careful, only for your own branch!)
+git push origin feature/feature-name --force-with-lease
 
-# Buat Pull Request ke develop
-gh pr create --base develop --head feature/nama-fitur
+# Create Pull Request to develop
+gh pr create --base develop --head feature/feature-name
 ```
 
 ### 3. Code Review & Merge
 
 ```bash
-# Setelah PR di-review dan disetujui:
-gh pr merge feature/nama-fitur --squash
+# After PR is reviewed and approved:
+gh pr merge feature/feature-name --squash
 
-# Hapus branch fitur
-git branch -d feature/nama-fitur
-git push origin --delete feature/nama-fitur
+# Delete feature branch
+git branch -d feature/feature-name
+git push origin --delete feature/feature-name
 ```
 
-### 4. Release ke Produksi
+### 4. Release to Production
 
 ```bash
-# Merge develop ke main
+# Merge develop to main
 git checkout main
 git pull origin main
 git merge develop
@@ -78,130 +78,130 @@ git push origin main
 
 ---
 
-## Manajemen Submodule
+## Submodule Management
 
-### Konsep
+### Concept
 
-Submodule adalah referensi git ke repositori lain di dalam repositori induk. Monorepo `aksesekolah.git` menggunakan submodule untuk merujuk ke repositori aplikasi yang terpisah.
+A submodule is a git reference to another repository within the parent repository. The `aksesekolah.git` monorepo uses submodules to reference separate application repositories.
 
 ```
-smauii-aksesekolah/           ← repositori induk
+smauii-aksesekolah/           ← parent repository
 ├── apps/
 │   ├── backend/              ← submodule → core.git (SHA pointer)
 │   ├── frontend/             ← submodule → webapp.git (SHA pointer) [future]
 │   └── mobile/               ← submodule → flutter.git (SHA pointer) [future]
-├── .gitmodules               ← daftar submodule
-└── .git/config               ← URL remote submodule
+├── .gitmodules               ← submodule list
+└── .git/config               ← submodule remote URLs
 ```
 
-### Menambahkan Submodule Baru
+### Adding a New Submodule
 
 ```bash
-# Dari root repositori induk
+# From the parent repository root
 cd C:\laragon\www\smauii-aksesekolah
 
-# Tambah submodule backend
+# Add backend submodule
 git submodule add git@github.com:SMA-UII-Yogyakarta/core.git apps/backend
 
-# Commit perubahan .gitmodules
+# Commit .gitmodules changes
 git add .gitmodules apps/backend
 git commit -m "chore: add backend submodule"
 git push
 ```
 
-### Clone Repositori dengan Submodule
+### Cloning a Repository with Submodules
 
 ```bash
-# Cara 1: Clone langsung dengan submodule
+# Method 1: Clone directly with submodules
 git clone --recurse-submodules git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
 
-# Cara 2: Clone dulu, lalu init submodule
+# Method 2: Clone first, then init submodules
 git clone git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
 cd aksesekolah
 git submodule update --init --recursive
 ```
 
-### Update Submodule ke Versi Terbaru
+### Updating Submodule to Latest Version
 
 ```bash
-# Cara 1: Update semua submodule
+# Method 1: Update all submodules
 git submodule update --remote --recursive
 
-# Cara 2: Update submodule spesifik
+# Method 2: Update specific submodule
 git submodule update --remote apps/backend
 
-# Setelah update, commit perubahan pointer
+# After update, commit pointer changes
 git add apps/backend
 git commit -m "chore: update backend submodule"
 git push
 ```
 
-### Bekerja di Dalam Submodule
+### Working Inside a Submodule
 
-Submodule pada dasarnya adalah repositori git biasa. Developer bisa masuk dan bekerja di dalamnya:
+A submodule is essentially a regular git repository. Developers can enter and work inside it:
 
 ```bash
-# Masuk ke submodule
+# Enter submodule
 cd apps/backend
 
-# Buat branch sendiri
-git checkout -b feature/presensi
+# Create your own branch
+git checkout -b feature/attendance
 
-# Kerja seperti biasa
+# Work as usual
 git add .
-git commit -m "feat: implementasi presensi"
-git push origin feature/presensi
+git commit -m "feat: attendance implementation"
+git push origin feature/attendance
 
-# Buat PR ke core.git (bukan ke aksesekolah.git!)
+# Create PR to core.git (not to aksesekolah.git!)
 ```
 
-> **Catatan Penting:** Submodule berada dalam *detached HEAD* secara default.
-> Selalu buat branch sebelum mulai bekerja di dalam submodule!
+> **Important Note:** Submodules are in *detached HEAD* state by default.
+> Always create a branch before working inside a submodule!
 
-### Tips Submodule
+### Submodule Tips
 
-| Situasi | Perintah |
+| Situation | Command |
 |---|---|
-| Clone project baru | `git clone --recurse-submodules <url>` |
+| Clone new project | `git clone --recurse-submodules <url>` |
 | Pull + update submodule | `git pull --recurse-submodules` |
-| Update semua submodule | `git submodule update --remote` |
-| Submodule di branch tertentu | `git submodule foreach 'git checkout main'` |
-| Lihat status submodule | `git submodule status` |
+| Update all submodules | `git submodule update --remote` |
+| Submodule on specific branch | `git submodule foreach 'git checkout main'` |
+| View submodule status | `git submodule status` |
 
 ---
 
 ## Commit Message Convention
 
-Gunakan konvensi [Conventional Commits](https://www.conventionalcommits.org/):
+Use [Conventional Commits](https://www.conventionalcommits.org/) convention:
 
 ```
-<type>: <deskripsi singkat>
+<type>: <short description>
 
-Contoh:
-feat: tambah fitur presensi dengan geolokasi
-fix: perbaiki validasi tanggal libur
-chore: update dependency laravel/framework
-docs: update dokumentasi arsitektur monorepo
-style: perbaiki indentasi blade template
-refactor: extract validation ke service class
-test: tambah unit test untuk triple-layer validation
+Examples:
+feat: add attendance feature with geolocation
+fix: fix holiday date validation
+chore: update laravel/framework dependency
+docs: update monorepo architecture documentation
+style: fix blade template indentation
+refactor: extract validation to service class
+test: add unit test for triple-layer validation
 ```
 
-| Type | Keterangan |
+| Type | Description |
 |---|---|
-| `feat` | Fitur baru |
-| `fix` | Perbaikan bug |
-| `chore` | Tugas rutin (update dependency, config) |
-| `docs` | Dokumentasi |
-| `style` | Perubahan format (tidak mengubah logika) |
-| `refactor` | Refaktor kode (tidak mengubah fungsionalitas) |
-| `test` | Penambahan test |
+| `feat` | New feature |
+| `fix` | Bug fix |
+| `chore` | Routine tasks (dependency update, config) |
+| `docs` | Documentation |
+| `style` | Format changes (no logic changes) |
+| `refactor` | Code refactoring (no functionality changes) |
+| `test` | Adding tests |
 
 ---
 
 ## GitHub Actions (Continuous Integration)
 
-Rekomendasi pipeline CI untuk setiap repositori:
+Recommended CI pipeline for each repository:
 
 ### core.git (Backend)
 
@@ -225,16 +225,16 @@ jobs:
 
 ---
 
-## Alur Update Monorepo ke Submodule
+## Monorepo to Submodule Update Flow
 
 ```
-[Backend Developer selesai fitur di core.git]
+[Backend Developer completes feature in core.git]
         │
         ▼
-[Push ke core.git → branch main]
+[Push to core.git → main branch]
         │
         ▼
-[Maintainer monorepo update submodule]
+[Monorepo maintainer updates submodule]
   cd smauii-aksesekolah
   git submodule update --remote apps/backend
   git add apps/backend
@@ -242,14 +242,14 @@ jobs:
   git push
         │
         ▼
-[Tim lain melakukan git pull di aksesekolah.git]
+[Other team members do git pull in aksesekolah.git]
   git pull --recurse-submodules
   git submodule update --init --recursive
 ```
 
 ---
 
-## .gitignore Monorepo
+## Monorepo .gitignore
 
 ```gitignore
 # Node

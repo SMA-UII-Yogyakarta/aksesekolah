@@ -1,262 +1,262 @@
-# Modul & Alur Program
+# Module & Program Flow
 
-## Skenario Umum — SSO Login
+## General Scenario — SSO Login
 
 ```
 ┌─────────┐     ┌──────────────┐     ┌─────────────┐
-│ Browser │────>│  SSO Portal  │────>│  Deteksi    │
-│         │     │  /login      │     │  Role       │
+│ Browser │────>│  SSO Portal  │────>│  Role       │
+│         │     │  /login      │     │  Detection  │
 └─────────┘     └──────────────┘     └──────┬──────┘
-                                            │
-                    ┌───────────────────────┼───────────────────────┐
-                    │                       │                       │
-                    ▼                       ▼                       ▼
-            ┌──────────────┐       ┌──────────────┐       ┌──────────────┐
-            │ Role: Admin  │       │ Role: Siswa  │       │ Role: Guru   │
-            │ /admin/*     │       │ /siswa/*     │       │ /guru/*      │
-            └──────────────┘       └──────────────┘       └──────────────┘
+                                             │
+                     ┌───────────────────────┼───────────────────────┐
+                     │                       │                       │
+                     ▼                       ▼                       ▼
+             ┌──────────────┐       ┌──────────────┐       ┌──────────────┐
+             │ Role: Admin  │       │ Role: Student│       │ Role: Teacher│
+             │ /admin/*     │       │ /student/*   │       │ /teacher/*   │
+             └──────────────┘       └──────────────┘       └──────────────┘
 
-                    ┌──────────────┐
-                    │ Role: Wali   │
-                    │ Murid        │
-                    │ /wali/*      │
-                    └──────────────┘
+                     ┌──────────────┐
+                     │ Role: Guard- │
+                     │ ian          │
+                     │ /guardian/*  │
+                     └──────────────┘
 ```
 
 ---
 
-## 1. Alur Presensi Siswa
+## 1. Student Attendance Flow
 
-Ini adalah alur paling penting dan paling kritis dalam sistem. Harus dioptimasi untuk kecepatan dan keandalan.
+This is the most important and most critical flow in the system. Must be optimized for speed and reliability.
 
 ```
-[Siswa membuka browser]
+[Student opens browser]
         │
         ▼
-[Login via SSO] ─── (deteksi role: siswa) ───> [Dashboard Siswa]
+[Login via SSO] ─── (role detection: student) ───> [Student Dashboard]
         │
         ▼
-[Menu: Presensi]
+[Menu: Attendance]
         │
         ▼
-[Sistem meminta izin:]
-  ● Akses Kamera (WebRTC)
-  ● Akses Lokasi (Geolocation API)
+[System requests permission:]
+  ● Camera Access (WebRTC)
+  ● Location Access (Geolocation API)
         │
         ▼
-[Siswa mengambil selfie]
+[Student takes selfie]
         │
         ▼
-[Kompresi gambar client-side]
+[Client-side image compression]
   ● Resize: 320x240 px
-  ● Kualitas: JPEG 90%
+  ● Quality: JPEG 90%
   ● Target: ≤ 20 KB
         │
         ▼
-[Kirim data ke server:]
-  ● foto (Base64 terkompresi)
+[Send data to server:]
+  ● photo (compressed Base64)
   ● latitude
   ● longitude
   ● timestamp
         │
         ▼
-[Server melakukan Triple-Layer Validation]
-  1. Cek kalender akademik (hari libur?)
-  2. Cek hari aktif (Sabtu/Minggu?)
-  3. Cek rentang jam:
+[Server performs Triple-Layer Validation]
+  1. Check academic calendar (holiday?)
+  2. Check active day (Saturday/Sunday?)
+  3. Check time range:
      │
-     ├── < jam_buka_masuk   → "Belum waktunya presensi"
-     ├── ≤ batas_terlambat  → status: "Hadir"
-     ├── ≤ jam_tutup_masuk  → status: "Terlambat"
-     └── > jam_tutup_masuk  → "Presensi ditutup"
+     ├── < open_time         → "Not yet time for attendance"
+     ├── ≤ late_threshold    → status: "Present"
+     ├── ≤ close_time        → status: "Late"
+     └── > close_time        → "Attendance closed"
         │
         ▼
-[Simpan ke database]
-  ● Foto diupload ke Object Storage
-  ● URL foto disimpan di tabel presensi
+[Save to database]
+  ● Photo uploaded to Object Storage
+  ● Photo URL saved in attendances table
         │
         ▼
-[Tampilkan konfirmasi ke siswa]
+[Display confirmation to student]
 ```
 
-### Detail Teknis Presensi
+### Attendance Technical Details
 
-| Langkah | Teknologi | Catatan |
+| Step | Technology | Notes |
 |---|---|---|
-| Akses kamera | `navigator.mediaDevices.getUserMedia()` | Wajib HTTPS |
-| Tangkapan gambar | Canvas API: `canvas.toDataURL('image/jpeg', 0.9)` | Resize ke 320x240 |
-| Geolokasi | `navigator.geolocation.getCurrentPosition()` | `enableHighAccuracy: true` |
-| Validasi server | Laravel Request + Validation | Triple-layer |
-| Upload foto | Laravel Filesystem + S3 driver | File disimpan, URL masuk DB |
+| Camera access | `navigator.mediaDevices.getUserMedia()` | HTTPS required |
+| Image capture | Canvas API: `canvas.toDataURL('image/jpeg', 0.9)` | Resize to 320x240 |
+| Geolocation | `navigator.geolocation.getCurrentPosition()` | `enableHighAccuracy: true` |
+| Server validation | Laravel Request + Validation | Triple-layer |
+| Photo upload | Laravel Filesystem + S3 driver | File stored, URL saved to DB |
 
 ---
 
-## 2. Alur Wali Murid — Pantau & Izin
+## 2. Guardian Flow — Monitor & Leave
 
 ```
-[Wali Murid login SSO]
+[Guardian logs in via SSO]
         │
         ▼
-[Dashboard Wali Murid]
+[Guardian Dashboard]
         │
-        ├── [Pilih profil anak] ─── [Lihat grafik kehadiran]
-        │                              ● Harian
-        │                              ● Bulanan
+        ├── [Select child profile] ─── [View attendance chart]
+        │                              ● Daily
+        │                              ● Monthly
         │                              ● Semester
         │
-        └── [Menu: Ajukan Izin]
+        └── [Menu: Submit Leave]
                 │
                 ▼
-        [Form Izin]
-          ● Pilih anak (jika >1)
-          ● Kategori: Sakit / Acara / Lomba
-          ● Tanggal mulai – selesai
-          ● Upload bukti (surat dokter, surat tugas)
+        [Leave Form]
+          ● Select child (if >1)
+          ● Category: Sick / Event / Competition
+          ● Start date – end date
+          ● Upload evidence (doctor's note, assignment letter)
           ● Submit
                 │
                 ▼
         [Status: Pending]
-        (Menunggu verifikasi Wali Kelas)
+        (Waiting for Homeroom Teacher verification)
 ```
 
-### Aturan Bisnis Izin
+### Leave Business Rules
 
-| Aturan | Detail |
+| Rule | Detail |
 |---|---|
-| Relasi | 1 Wali Murid → N Siswa (kakak-beradik) |
-| Upload bukti | Format: JPG, PNG, PDF. Maks 2 MB per file |
-| Status approval | Pending → Disetujui/Ditolak (oleh Wali Kelas) |
-| Izin berturut-turut | Boleh, dengan rentang tanggal yang valid |
+| Relationship | 1 Guardian → N Students (siblings) |
+| Evidence upload | Format: JPG, PNG, PDF. Max 2 MB per file |
+| Approval status | Pending → Approved/Rejected (by Homeroom Teacher) |
+| Consecutive leave | Allowed, with valid date range |
 
 ---
 
-## 3. Alur Wali Kelas — Verifikasi & Monitoring
+## 3. Homeroom Teacher Flow — Verification & Monitoring
 
 ```
-[Wali Kelas login SSO]
+[Homeroom Teacher logs in via SSO]
         │
         ▼
-[Dashboard Wali Kelas]
+[Homeroom Teacher Dashboard]
         │
-        ├── [Notifikasi: Izin Masuk]
+        ├── [Notification: Incoming Leave]
         │       │
         │       ▼
-        │   [Panel Verifikasi Izin]
-        │     ● Daftar pengajuan dari wali murid
-        │     ● Lihat detail + dokumen bukti
+        │   [Leave Verification Panel]
+        │     ● List of submissions from guardians
+        │     ● View details + supporting documents
         │     ● Approve / Reject
         │
-        └── [Rekap Kelas]
-              ● Filter: Hari ini / Bulan ini / Semester
-              ● Lihat daftar siswa + status kehadiran
-              ● Ekspor PDF/Excel
+        └── [Class Recap]
+              ● Filter: Today / This month / This semester
+              ● View student list + attendance status
+              ● Export PDF/Excel
 ```
 
 ---
 
-## 4. Alur Guru Piket — Monitoring Real-Time
+## 4. Duty Teacher Flow — Real-Time Monitoring
 
 ```
-[Guru Piket login SSO]
+[Duty Teacher logs in via SSO]
         │
         ▼
-[Dashboard Guru Piket]
+[Duty Teacher Dashboard]
         │
         ▼
-[Monitoring Harian]
+[Daily Monitoring]
         │
         ▼
-[Filter Cepat — Pilih Kelas]
+[Quick Filter — Select Class]
         │
         ▼
-[Tampilkan:]
-  ● Total siswa di kelas
-  ● ✅ Sudah presensi (Hadir)
-  ● ⚠️ Terlambat
-  ● ❌ Belum presensi / Alpa
-  ● Waktu presensi masing-masing
+[Display:]
+  ● Total students in class
+  ● ✅ Already attended (Present)
+  ● ⚠️ Late
+  ● ❌ Not yet attended / Absent
+  ● Each student's attendance time
 ```
 
 ---
 
-## 5. Alur Admin — Manajemen Pusat
+## 5. Admin Flow — Central Management
 
 ```
-[Admin login SSO]
+[Admin logs in via SSO]
         │
         ▼
-[Dashboard Admin — Statistik Sekolah]
+[Admin Dashboard — School Statistics]
         │
-        ├── [Manajemen Data Master]
-        │     ├── Siswa   → CRUD + Import/Export Excel
-        │     ├── Guru    → CRUD + Import/Export Excel
-        │     ├── Wali Murid → CRUD + Import/Export Excel
-        │     └── Kelas   → CRUD + Enrolment
+        ├── [Master Data Management]
+        │     ├── Students   → CRUD + Import/Export Excel
+        │     ├── Teachers   → CRUD + Import/Export Excel
+        │     ├── Guardians  → CRUD + Import/Export Excel
+        │     └── Classes    → CRUD + Enrolment
         │
-        ├── [Manajemen Presensi & Izin]
-        │     ├── Lihat rekap harian/bulanan/semester
-        │     ├── Koreksi / override data (bypass)
-        │     └── Ekspor PDF/Excel
+        ├── [Attendance & Leave Management]
+        │     ├── View daily/monthly/semester recap
+        │     ├── Correction / data override (bypass)
+        │     └── Export PDF/Excel
         │
-        ├── [Pengaturan]
-        │     ├── Jam Presensi → Buka/Terlambat/Tutup per hari
-        │     └── Kalender Akademik → Daftar hari libur
+        ├── [Settings]
+        │     ├── Attendance Hours → Open/Late/Close per day
+        │     └── Academic Calendar → Holiday list
         │
         └── [Drill-Down Analytics]
-              Level 1 → [Grafik Seluruh Sekolah]
-                    ↓ klik
-              Level 2 → [Grafik per Kelas]
-                    ↓ klik
-              Level 3 → [Statistik per Siswa]
-                    ↓ klik
-              Level 4 → [Detail Kehadiran by Name]
+              Level 1 → [Chart Entire School]
+                    ↓ click
+              Level 2 → [Chart per Class]
+                    ↓ click
+              Level 3 → [Statistics per Student]
+                    ↓ click
+              Level 4 → [Attendance Detail by Name]
 ```
 
-### Fitur Import/Export Excel
+### Import/Export Excel Features
 
-| Fitur | Detail |
+| Feature | Detail |
 |---|---|
-| Template download | Sistem menyediakan template Excel dengan kolom yang benar |
-| Import | Upload file Excel → validasi → insert/update batch |
-| Export | Download data master atau rekap ke Excel |
-| Library rekomendasi | PhpSpreadsheet (untuk Laravel) |
+| Template download | System provides Excel template with correct columns |
+| Import | Upload Excel file → validation → batch insert/update |
+| Export | Download master data or recap to Excel |
+| Recommended library | PhpSpreadsheet (for Laravel) |
 
 ---
 
-## 6. Alur Laporan & Export
+## 6. Report & Export Flow
 
 ```
-[User: Admin / Wali Kelas / Guru Piket]
+[User: Admin / Homeroom Teacher / Duty Teacher]
         │
         ▼
-[Menu: Laporan]
+[Menu: Reports]
         │
         ├── [Filter]
-        │     ● Rentang: Harian / Bulanan / Semester
-        │     ● Kelas: (opsional, filter)
-        │     ● Status: (opsional, filter)
+        │     ● Range: Daily / Monthly / Semester
+        │     ● Class: (optional, filter)
+        │     ● Status: (optional, filter)
         │
         └── [Export]
-              ● PDF → untuk cetak resmi
-              ● Excel → untuk olah data lanjutan
+              ● PDF → for official printing
+              ● Excel → for further data processing
 ```
 
 ---
 
-## Ringkasan Interface
+## Interface Summary
 
-| No | Interface | Role | Prioritas |
+| No | Interface | Role | Priority |
 |---|---|---|---|
-| 1 | Login SSO | Semua | P0 |
-| 2 | Dashboard Admin | Admin | P0 |
-| 3 | Manajemen Data Master | Admin | P0 |
-| 4 | Manajemen Kelas & Enrolment | Admin | P0 |
-| 5 | Pengaturan Waktu & Libur | Admin | P1 |
-| 6 | Dashboard Siswa | Siswa | P0 |
-| 7 | Form Presensi Live | Siswa | P0 |
-| 8 | Dashboard Wali Murid | Wali Murid | P0 |
-| 9 | Form Pengajuan Izin | Wali Murid | P0 |
-| 10 | Dashboard Wali Kelas | Wali Kelas | P0 |
-| 11 | Panel Verifikasi Izin | Wali Kelas | P1 |
-| 12 | Dashboard Guru Piket | Guru Piket | P0 |
-| 13 | Laporan & Export | Admin, Wali Kelas, Guru Piket | P1 |
+| 1 | SSO Login | All | P0 |
+| 2 | Admin Dashboard | Admin | P0 |
+| 3 | Master Data Management | Admin | P0 |
+| 4 | Class Management & Enrolment | Admin | P0 |
+| 5 | Time & Holiday Settings | Admin | P1 |
+| 6 | Student Dashboard | Student | P0 |
+| 7 | Live Attendance Form | Student | P0 |
+| 8 | Guardian Dashboard | Guardian | P0 |
+| 9 | Leave Submission Form | Guardian | P0 |
+| 10 | Homeroom Teacher Dashboard | Homeroom Teacher | P0 |
+| 11 | Leave Verification Panel | Homeroom Teacher | P1 |
+| 12 | Duty Teacher Dashboard | Duty Teacher | P0 |
+| 13 | Reports & Export | Admin, Homeroom Teacher, Duty Teacher | P1 |

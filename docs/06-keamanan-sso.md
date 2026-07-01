@@ -1,10 +1,10 @@
-# Keamanan & Single Sign-On (SSO)
+# Security & Single Sign-On (SSO)
 
-## Arsitektur SSO
+## SSO Architecture
 
-SMART Absen SMA UII menggunakan pendekatan **Single Sign-On (SSO) mandiri** yang dibangun di atas Laravel. Sistem ini dirancang sebagai **Identity Provider (IdP)** pertama di lingkungan yayasan, yang kelak akan menjadi standar autentikasi bagi seluruh aplikasi SMA UII.
+SMART Absen SMA UII uses a **self-managed Single Sign-On (SSO)** approach built on top of Laravel. This system is designed as the first **Identity Provider (IdP)** in the foundation environment, which will later become the authentication standard for all SMA UII applications.
 
-### Konsep Identity Provider
+### Identity Provider Concept
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -21,28 +21,27 @@ SMART Absen SMA UII menggunakan pendekatan **Single Sign-On (SSO) mandiri** yang
 │  └──────────────────────────────────────────────────┘   │
 └──────────────────────┬──────────────────────────────────┘
                        │
-        ┌──────────────┼──────────────┐
-        │              │              │
-        ▼              ▼              ▼
+         ┌──────────────┼──────────────┐
+         │              │              │
+         ▼              ▼              ▼
 ┌────────────┐ ┌────────────┐ ┌────────────┐
-│ Aplikasi   │ │ Aplikasi   │ │ Aplikasi   │
-│ e-Learning │ │ Keuangan   │ │ Perpus-    │
-│ (future)   │ │ (future)   │ │ takaan     │
-│            │ │            │ │ (future)   │
+│ e-Learning │ │ Financial  │ │ Library    │
+│ App        │ │ App        │ │ App        │
+│ (future)   │ │ (future)   │ │ (future)   │
 └────────────┘ └────────────┘ └────────────┘
 ```
 
-### Teknologi yang Digunakan
+### Technology Used
 
 **Laravel Sanctum + Spatie Laravel Permission**
 
-| Alasan | Detail |
+| Reason | Detail |
 |---|---|
-| **Sederhana** | API token berbasis database, cocok untuk SPA dan mobile |
-| **Stateful** | Session-based auth untuk Inertia pages |
-| **Stateless** | API token untuk aplikasi third-party di masa depan |
-| **Built-in** | Sanctum dan Spatie terintegrasi native dengan Laravel |
-| **RBAC** | Spatie menyediakan role, permission, team, dan blade directive |
+| **Simple** | Database-based API token, suitable for SPA and mobile |
+| **Stateful** | Session-based auth for Inertia pages |
+| **Stateless** | API token for third-party applications in the future |
+| **Built-in** | Sanctum and Spatie are natively integrated with Laravel |
+| **RBAC** | Spatie provides role, permission, team, and blade directives |
 
 ---
 
@@ -52,222 +51,224 @@ SMART Absen SMA UII menggunakan pendekatan **Single Sign-On (SSO) mandiri** yang
 
 ```
 ┌─────────────────────────────────────────┐
-│                SUPER ADMIN               │
-│  (Akses penuh seluruh sistem + bypass)   │
+│              SUPER ADMIN                 │
+│  (Full system access + bypass)          │
 └─────────────────────────────────────────┘
                     │
                     ▼
 ┌─────────────────────────────────────────┐
-│                  ADMIN                   │
-│  (CRUD master data, pengaturan, rekap)  │
+│                 ADMIN                    │
+│  (CRUD master data, settings, recap)    │
 └─────────────────────────────────────────┘
                     │
-        ┌───────────┴───────────┐
-        │                       │
-        ▼                       ▼
+         ┌───────────┴───────────┐
+         │                       │
+         ▼                       ▼
 ┌──────────────┐    ┌──────────────────────┐
-│  Wali Kelas  │    │    Guru Piket        │
-│ (verifikasi  │    │ (monitoring realtime)│
-│  izin, rekap)│    └──────────────────────┘
+│  Homeroom    │    │    Duty Teacher      │
+│  Teacher     │    │ (real-time monitor)  │
+│ (verify      │    └──────────────────────┘
+│  leave,recap)│
 └──────┬───────┘
        │
-       ▼ (tidak ada hirarki, role terpisah)
+       ▼ (no hierarchy, separate roles)
 ┌──────────────┐    ┌──────────────────────┐
-│    Siswa     │    │   Wali Murid         │
-│  (presensi)  │    │ (pantau anak + izin) │
+│   Student    │    │     Guardian         │
+│ (attendance) │    │ (monitor child +    │
+│              │    │  submit leave)       │
 └──────────────┘    └──────────────────────┘
 ```
 
-### Implementasi dengan Spatie Laravel Permission
+### Implementation with Spatie Laravel Permission
 
 ```bash
-# Instalasi
+# Installation
 bun add composer spatie/laravel-permission
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 php artisan migrate
 ```
 
 ```php
-// Definisi role & permission di seeder / Service Provider
+// Role & permission definition in seeder / Service Provider
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-// Buat permission
-Permission::create(['name' => 'create-presensi']);
-Permission::create(['name' => 'view-laporan']);
+// Create permissions
+Permission::create(['name' => 'create-attendance']);
+Permission::create(['name' => 'view-reports']);
 Permission::create(['name' => 'manage-user']);
-Permission::create(['name' => 'manage-kelas']);
-Permission::create(['name' => 'approve-izin']);
+Permission::create(['name' => 'manage-class']);
+Permission::create(['name' => 'approve-leave']);
 
-// Buat role + assign permission
+// Create roles + assign permissions
 $superAdmin = Role::create(['name' => 'super-admin']); // all permissions via gate
 $admin = Role::create(['name' => 'admin']);
-$admin->givePermissionTo(['create-presensi', 'view-laporan', 'manage-user', 'manage-kelas', 'approve-izin']);
+$admin->givePermissionTo(['create-attendance', 'view-reports', 'manage-user', 'manage-class', 'approve-leave']);
 
-$guru = Role::create(['name' => 'guru']);
-$guru->givePermissionTo(['create-presensi', 'view-laporan', 'approve-izin']);
+$teacher = Role::create(['name' => 'teacher']);
+$teacher->givePermissionTo(['create-attendance', 'view-reports', 'approve-leave']);
 
-$siswa = Role::create(['name' => 'siswa']);
-$siswa->givePermissionTo(['create-presensi']);
+$student = Role::create(['name' => 'student']);
+$student->givePermissionTo(['create-attendance']);
 
-$waliMurid = Role::create(['name' => 'wali-murid']);
-$waliMurid->givePermissionTo(['view-laporan', 'approve-izin']);
+$guardian = Role::create(['name' => 'guardian']);
+$guardian->givePermissionTo(['view-reports', 'approve-leave']);
 ```
 
 ```php
-// Penggunaan di Route
+// Usage in Routes
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'role:admin|super-admin'])->group(function () {
     Route::resource('users', UserController::class);
 });
 
-Route::middleware(['auth:sanctum', 'permission:create-presensi'])->group(function () {
-    Route::post('/presensi', [PresensiController::class, 'store']);
+Route::middleware(['auth:sanctum', 'permission:create-attendance'])->group(function () {
+    Route::post('/attendance', [AttendanceController::class, 'store']);
 });
 ```
 
 ```php
-// Penggunaan di Blade/Inertia
+// Usage in Blade/Inertia
 @role('admin')
-    <!-- tampilkan admin panel -->
+    <!-- display admin panel -->
 @endrole
 
-@can('view-laporan')
-    <!-- tampilkan tombol laporan -->
+@can('view-reports')
+    <!-- display report button -->
 @endcan
 ```
 
 ---
 
-## Triple-Layer Validation Presensi
+## Triple-Layer Attendance Validation
 
-Sebelum sistem menyimpan data kehadiran, server WAJIB melakukan tiga lapis validasi:
+Before the system saves attendance data, the server MUST perform three layers of validation:
 
-### Layer 1: Validasi Kalender Akademik
+### Layer 1: Academic Calendar Validation
 
 ```php
-// Cek apakah tanggal hari ini ada di tabel kalender_akademik
-$isHoliday = KalenderAkademik::where('tanggal', today())
-    ->where('status_libur', true)
+// Check if today's date exists in the academic_calendars table
+$isHoliday = AcademicCalendar::where('date', today())
+    ->where('is_holiday', true)
     ->exists();
 
 if ($isHoliday) {
     return response()->json([
         'status' => 'rejected',
-        'message' => 'Hari ini adalah hari libur akademik'
+        'message' => 'Today is an academic holiday'
     ], 403);
 }
 ```
 
-### Layer 2: Validasi Hari Aktif
+### Layer 2: Active Day Validation
 
 ```php
-// Cek apakah hari ini adalah hari aktif
-$hariIni = today()->format('l'); // Monday, Tuesday, dll.
+// Check if today is an active day
+$hariIni = today()->format('l'); // Monday, Tuesday, etc.
 
-$pengaturan = PengaturanJamPresensi::where('hari', $hariIni)->first();
+$setting = AttendanceTimeSetting::where('day', $hariIni)->first();
 
-if (! $pengaturan) {
+if (! $setting) {
     return response()->json([
         'status' => 'rejected',
-        'message' => 'Tidak ada jadwal presensi untuk hari ini'
+        'message' => 'No attendance schedule for today'
     ], 403);
 }
 ```
 
-### Layer 3: Validasi Rentang Jam
+### Layer 3: Time Range Validation
 
 ```php
-$waktuSekarang = now()->format('H:i:s');
+$currentTime = now()->format('H:i:s');
 
-if ($waktuSekarang < $pengaturan->jam_buka_masuk) {
-    // Belum waktunya presensi
+if ($currentTime < $setting->open_time) {
+    // Not yet time for attendance
     return response()->json(['status' => 'too_early'], 403);
 }
 
-if ($waktuSekarang <= $pengaturan->batas_terlambat) {
-    $status = 'Hadir';
-} elseif ($waktuSekarang <= $pengaturan->jam_tutup_masuk) {
-    $status = 'Terlambat';
+if ($currentTime <= $setting->late_threshold) {
+    $status = 'Present';
+} elseif ($currentTime <= $setting->close_time) {
+    $status = 'Late';
 } else {
-    // Presensi ditutup
+    // Attendance closed
     return response()->json(['status' => 'closed'], 403);
 }
 ```
 
-### Diagram Validasi
+### Validation Diagram
 
 ```
-[Request Presensi Masuk]
+[Attendance Request]
         │
         ▼
-┌───────────────────┐   TIDAK   ┌──────────────────┐
-│  Cek Kalender     │───────────│  Tolak: "Hari    │
-│  Akademik         │           │  Libur Akademik" │
-└────────┬──────────┘           └──────────────────┘
-         │ YA
+┌───────────────────┐   NO    ┌──────────────────┐
+│  Check Academic   │─────────│  Reject: "Acade- │
+│  Calendar         │         │  mic Holiday"    │
+└────────┬──────────┘         └──────────────────┘
+         │ YES
          ▼
-┌───────────────────┐   TIDAK   ┌──────────────────┐
-│  Cek Hari Aktif   │───────────│  Tolak: "Tidak   │
-│  (ada di         │           │  Ada Jadwal"     │
-│  pengaturan?)    │           └──────────────────┘
+┌───────────────────┐   NO    ┌──────────────────┐
+│  Check Active Day │─────────│  Reject: "No     │
+│  (exists in      │         │  Schedule"        │
+│  settings?)      │         └──────────────────┘
 └────────┬──────────┘
-         │ YA
+         │ YES
          ▼
 ┌──────────────────────────────────────────────────┐
-│              Cek Rentang Jam                      │
+│              Check Time Range                     │
 ├──────────┬──────────┬──────────┬──────────────────┤
-│ < Buka   │ Buka s/d │ Terlambat│ > Tutup          │
-│          │ Terlambat│ s/d Tutup│                   │
+│ < Open   │ Open to  │ Late to  │ > Close          │
+│          │ Late     │ Close    │                   │
 ├──────────┼──────────┼──────────┼──────────────────┤
-│ "Terlalu │ "Hadir"  │ "Terlam- │ "Presensi        │
-│  Dini"   │          │  bat"    │ Ditutup"         │
+│ "Too     │ "Present"│ "Late"   │ "Attendance      │
+│  Early"  │          │          │ Closed"          │
 └──────────┴──────────┴──────────┴──────────────────┘
 ```
 
 ---
 
-## Prinsip Keamanan Lain
+## Other Security Principles
 
-### 1. Konfigurasi Dinamis (Anti-Hardcode)
+### 1. Dynamic Configuration (Anti-Hardcode)
 
 ```
-❌ DILARANG:
-if ($jamSekarang < 6 && $jamSekarang > 8) { ... }
+❌ PROHIBITED:
+if ($currentHour < 6 && $currentHour > 8) { ... }
 
-✅ DIVAJIBKAN:
-$pengaturan = PengaturanJamPresensi::where('hari', today()->dayName)->first();
-if ($waktuSekarang < $pengaturan->jam_buka_masuk) { ... }
+✅ REQUIRED:
+$setting = AttendanceTimeSetting::where('day', today()->dayName)->first();
+if ($currentTime < $setting->open_time) { ... }
 ```
 
-### 2. Tokenisasi & Session
+### 2. Tokenization & Session
 
-| Aspek | Metode |
+| Aspect | Method |
 |---|---|
 | Web (Browser) | Session-based via Laravel cookie |
 | API (Mobile future) | Sanctum token |
 | CSRF Protection | Laravel built-in CSRF token |
 | Password hashing | Bcrypt (12 rounds) |
 
-### 3. Proteksi URL & Data
+### 3. URL & Data Protection
 
-- Semua route dibungkus middleware `auth:sanctum` + `role:xxx`
-- Policy/Guard untuk operasi spesifik (misal: siswa hanya bisa presensi untuk dirinya sendiri)
-- Validasi server-side untuk semua input
-- Rate limiting pada endpoint presensi untuk mencegah spam
+- All routes wrapped in `auth:sanctum` + `role:xxx` middleware
+- Policy/Guard for specific operations (e.g., students can only attend for themselves)
+- Server-side validation for all inputs
+- Rate limiting on attendance endpoints to prevent spam
 
 ### 4. Object Storage Security
 
-- File diupload langsung ke Object Storage (bukan via server Laravel)
-- URL file bersifat signed/temporary (expired dalam waktu tertentu)
-- Validasi tipe file di server sebelum menyimpan URL
+- Files uploaded directly to Object Storage (not via Laravel server)
+- File URLs are signed/temporary (expire after a certain time)
+- File type validation on server before saving URL
 
-### Kelebihan & Kekurangan Web-Based
+### Web-Based Advantages & Disadvantages
 
-| Aspek | Kelebihan | Kekurangan |
+| Aspect | Advantage | Disadvantage |
 |---|---|---|
-| Instalasi | Tanpa install, cukup browser | — |
-| Update | Instant, tanpa download | — |
-| Offline | — | Tidak bisa presensi tanpa internet |
-| Izin perangkat | — | Pengguna awam bisa blokir kamera/lokasi |
+| Installation | No install, just browser | — |
+| Update | Instant, no download | — |
+| Offline | — | Cannot attend without internet |
+| Device permissions | — | Inexperienced users may block camera/location |

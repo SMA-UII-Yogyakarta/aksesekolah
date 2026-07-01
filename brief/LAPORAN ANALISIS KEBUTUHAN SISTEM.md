@@ -1,79 +1,79 @@
-# **LAPORAN ANALISIS KEBUTUHAN SISTEM**
+# **SYSTEM REQUIREMENTS ANALYSIS REPORT**
 
-**Nama Proyek:** SMART ABSEN SMA UII
+**Project Name:** SMART ABSEN SMA UII
 
-**Target Arsitektur:** Web-Based (Mobile Responsive & Desktop)
+**Target Architecture:** Web-Based (Mobile Responsive & Desktop)
 
-**Teknologi Utama:** PHP Laravel & RDBMS (PostgreSQL/MariaDB/MySQL)
+**Core Technology:** PHP Laravel & RDBMS (PostgreSQL/MariaDB/MySQL)
 
-**Proyeksi Masa Depan:** Gerbang Utama Single Sign-On (SSO) & Fondasi "UII Satu Data"
+**Future Projection:** Single Sign-On (SSO) Gateway & Foundation of "UII Satu Data"
 
-1. ## **DESKRIPSI UMUM SISTEM**
+1. ## **GENERAL SYSTEM DESCRIPTION**
 
-Sistem Informasi Presensi Siswa Terintegrasi adalah aplikasi berbasis web responsif yang dirancang untuk mengotomatisasi, mengamankan, dan mensentralisasi pencatatan kehadiran siswa di lingkungan instansi sekolah di bawah naungan yayasan.
+The Integrated Student Attendance Information System is a responsive web-based application designed to automate, secure, and centralize student attendance recording within the school institution under the foundation.
 
-Sistem ini mengintegrasikan teknologi pelacakan lokasi (*Geolocation API*) dan pengambilan gambar biometrik (*Webcam*) di sisi klien yang dioptimalkan untuk menangani beban lalu lintas tinggi (*high concurrency traffic*) hingga 760+ siswa secara bersamaan pada jam masuk sekolah. Sistem ini menggunakan pintu masuk tunggal (*Single Sign-On*) sebagai fondasi awal standarisasi identitas digital terpusat bagi seluruh ekosistem aplikasi yayasan di masa mendatang.
+This system integrates location tracking technology (Geolocation API) and biometric image capture (Webcam) on the client side, optimized to handle high concurrency traffic of 760+ students simultaneously during school entry hours. The system uses Single Sign-On as the initial foundation for centralized digital identity standardization across the entire future foundation application ecosystem.
 
-2. ## **KEBUTUHAN FUNGSIONAL** 
+2. ## **FUNCTIONAL REQUIREMENTS**
 
-Kebutuhan fungsional diatur berdasarkan peran pengguna (*Role-Based Access Control*) dan modul inti sistem:
+Functional requirements are organized by user roles (Role-Based Access Control) and core system modules:
 
-1. ### **Modul Pintu Masuk (Universal SSO Portal)**
+1. ### **Entry Point Module (Universal SSO Portal)**
 
-* Sistem harus menyediakan satu portal autentikasi (*login*) tunggal untuk seluruh kategori pengguna.  
-* Sistem harus secara otomatis mendeteksi peran akun (*role*) setelah proses login berhasil, kemudian mengarahkan pengguna ke *dashboard* masing-masing (*Admin, Guru, Siswa,* atau *Wali Murid*).  
-* Arsitektur modul *login* ini harus dirancang sebagai *Identity Provider* (IdP) menggunakan standar Laravel (Passport/Sanctum) agar dapat digunakan oleh aplikasi yayasan lainnya di masa depan.
+* The system must provide a single authentication (login) portal for all user categories.  
+* The system must automatically detect the account role after successful login, then redirect the user to their respective dashboard (Admin, Teacher, Student, or Guardian).  
+* This login module architecture must be designed as an Identity Provider (IdP) using Laravel standards (Passport/Sanctum) so that it can be used by other foundation applications in the future.
 
-2. ### **Modul Hak Akses: Admin (Pengelola Pusat)**
+2. ### **Access Role Module: Admin (Central Manager)**
 
-* **Manajemen Data Master (CRUD Satuan & Bulk):** Sistem harus mampu melakukan manajemen data (Buat, Baca, Ubah, Hapus) untuk entitas Siswa, Guru, dan Wali Murid, baik secara satuan maupun massal melalui fitur *Upload/Download* template file Excel.  
-* **Enrolment Kelas & Pemetaan Akademik:** Sistem harus menyediakan fungsi untuk membuat Kelas, menunjuk 1 Guru sebagai Wali Kelas (*One-to-Many* terhadap siswa), dan memasukkan daftar siswa ke dalam kelas tersebut secara *bulk*.  
-* **Manajemen Presensi & Izin (*Bypass System*):** Admin memiliki hak akses penuh untuk melakukan CRUD pada data kehadiran dan izin harian, bulanan, maupun semester sebagai fungsi koreksi/override jika terjadi kendala teknis.  
-* **Dashboard Analitik Lanjut (*Drill-Down Analytics*):** Dashboard Admin harus menampilkan statistik kehadiran *real-time* yang bersifat interaktif dengan hirarki:  
-  * *Level 1:* Grafik Statistik Keseluruhan Sekolah.  
-  * *Level 2:* Grafik Statistik per Kelas.  
-  * *Level 3:* Statistik per Siswa di dalam kelas tersebut.  
-  * *Level 4:* Detail Kehadiran *by Name* (Harian, Bulanan, Semester).
+* **Master Data Management (Individual & Bulk CRUD):** The system must be able to manage data (Create, Read, Update, Delete) for Student, Teacher, and Guardian entities, both individually and in bulk through Excel template Upload/Download features.  
+* **Class Enrolment & Academic Mapping:** The system must provide functions to create Classes, appoint 1 Teacher as Homeroom Teacher (One-to-Many with students), and enroll students into classes in bulk.  
+* **Attendance & Leave Management (Bypass System):** Admin has full access rights to perform CRUD on daily, monthly, and semester attendance and leave data as a correction/override function in case of technical issues.  
+* **Advanced Drill-Down Analytics Dashboard:** The Admin Dashboard must display real-time interactive attendance statistics with the following hierarchy:  
+  * *Level 1:* Overall School Statistics Chart.  
+  * *Level 2:* Per-Class Statistics Chart.  
+  * *Level 3:* Per-Student Statistics within the class.  
+  * *Level 4:* Attendance Details by Name (Daily, Monthly, Semester).
 
-3. ### **Modul Hak Akses: Siswa**
+3. ### **Access Role Module: Student**
 
-* **Presensi Live (Kamera & GPS):** Sistem harus menyediakan antarmuka presensi yang mewajibkan siswa mengambil foto diri (*selfie*) dan mengunci titik koordinat geolokasi (Latitude & Longitude) secara *real-time*.  
-* **Laporan Kehadiran Pribadi:** Menyediakan grafik dan rekapitulasi kehadiran mandiri yang dapat difilter berdasarkan rentang Harian, Bulanan, dan Semester.
+* **Live Attendance (Camera & GPS):** The system must provide an attendance interface that requires students to take a selfie and lock geolocation coordinates (Latitude & Longitude) in real-time.  
+* **Personal Attendance Report:** Provide self-service attendance charts and recaps filterable by Daily, Monthly, and Semester ranges.
 
-4. ### **Modul Hak Akses: Wali Murid**
+4. ### **Access Role Module: Guardian**
 
-* **Aturan Bisnis Relasi (*One-to-Many*):** Satu akun Wali Murid dapat mengampu lebih dari satu siswa (kakak-beradik) dalam instansi yang sama.  
-* **Multi-Profil Anak:** Dashboard Wali Murid wajib menyediakan fitur *switch-profile* (pilihan anak) untuk melihat rekap presensi masing-masing anak secara terpisah (Harian, Bulanan, Semester).  
-* **Pengajuan Izin Digital:** Menyediakan formulir pengajuan izin tidak masuk sekolah (Kategori: Sakit, Acara, Lomba) dengan kewajiban memilih profil anak yang dimaksud, menentukan durasi hari, serta mengunggah dokumen bukti fisik (seperti surat dokter/surat tugas) dalam format gambar/PDF.
+* **Business Rule (One-to-Many):** One Guardian account can oversee more than one student (siblings) within the same institution.  
+* **Multi-Child Profile:** The Guardian Dashboard must provide a switch-profile feature (child selection) to view each child's attendance recap separately (Daily, Monthly, Semester).  
+* **Digital Leave Request:** Provide a leave request form for school absence (Categories: Sick, Event, Competition) with mandatory child profile selection, duration specification, and physical document upload (such as a doctor's letter or assignment letter) in image/PDF format.
 
-5. ### **Modul Hak Akses: Wali Kelas**
+5. ### **Access Role Module: Homeroom Teacher**
 
-* **Aturan Bisnis Relasi (*One-to-Many*):** Satu Wali Kelas bertanggung jawab penuh atas rekapitulasi data banyak siswa di dalam satu ruang lingkup kelas yang diampunya.  
-* **Panel Verifikasi Izin:** Sistem harus menampilkan *kotak masuk* notifikasi pengajuan izin dari Wali Murid yang berada di bawah perwaliannya, untuk kemudian disetujui (*Approve*) atau ditolak (*Reject*).  
-* **Monitoring & Rekap Kelas:** Wali Kelas dapat membaca dan mengeksplorasi laporan kehadiran seluruh siswa di kelasnya secara Harian, Bulanan, maupun Semester.
+* **Business Rule (One-to-Many):** One Homeroom Teacher is fully responsible for the data recap of many students within one class scope under their supervision.  
+* **Leave Verification Panel:** The system must display an inbox of leave request notifications from Guardians under their supervision, for subsequent approval (Approve) or rejection (Reject).  
+* **Class Monitoring & Recap:** Homeroom Teachers can view and explore attendance reports for all students in their class on a Daily, Monthly, or Semester basis.
 
-6. ### **Modul Hak Akses: Guru Piket**
+6. ### **Access Role Module: Duty Teacher**
 
-* **Live Monitoring Filtered:** Guru piket dapat melihat rekapitulasi kehadiran seluruh siswa sekolah pada hari berjalan, yang dilengkapi dengan fitur *filter cepat* berdasarkan kelas untuk mempermudah pengecekan fisik di lapangan.
+* **Filtered Live Monitoring:** Duty teachers can view the attendance recap of all school students on the current day, equipped with a quick filter feature by class to facilitate physical field checks.
 
-3. ## **KEBUTUHAN NON-FUNGSIONAL** 
+3. ## **NON-FUNCTIONAL REQUIREMENTS**
 
-1. ### **Performa & Manajemen Konkurensi Jaringan (*Performance*)**
+1. ### **Performance & Network Concurrency Management**
 
-* **Optimasi Payload Gambar (Frontend Compression):** Antarmuka presensi siswa wajib mengintegrasikan skrip kompresi di sisi klien (*Client-Side Rendering*) menggunakan JavaScript (HTML5 Canvas/WebcamJS) untuk membatasi resolusi tangkapan kamera pada ukuran 320x240 piksel dengan kualitas JPEG 90%.  
-* **Batasan Ukuran File:** Hasil konversi foto harus berbentuk teks Base64 dengan ukuran file **maksimal \< 20 KB** per siswa. Hal ini bertujuan agar total data yang masuk saat 760 siswa melakukan presensi serentak tidak melebihi **\~15,2 MB**, sehingga menghemat *bandwidth* internal sekolah.  
-* **Tuning Database:** Pengaturan *web server* dan database relasional pada *server* internal instansi wajib menaikkan parameter koneksi maksimal (`max_connections`) minimal di angka **1000 koneksi serentak** untuk menghindari kegagalan sistem (*connection timeout* / *Too Many Connections*) pada jam sibuk (06:30 \- 07:00 WIB).
+* **Image Payload Optimization (Frontend Compression):** The student attendance interface must integrate client-side compression scripts (Client-Side Rendering) using JavaScript (HTML5 Canvas/WebcamJS) to limit camera capture resolution to 320x240 pixels with 90% JPEG quality.  
+* **File Size Limit:** The resulting photo conversion must be in Base64 text format with a **maximum file size of \< 20 KB** per student. This ensures that total incoming data when 760 students attend simultaneously does not exceed **\~15.2 MB**, thus saving the school's internal bandwidth.  
+* **Database Tuning:** The web server and relational database settings on the institution's internal server must raise the maximum connection parameter (`max_connections`) to at least **1000 concurrent connections** to avoid system failure (connection timeout / Too Many Connections) during peak hours (06:30 \- 07:00 AM WIB).
 
-2. ### **Desain Antarmuka (*Usability*)**
+2. ### **Interface Design (Usability)**
 
-* **Responsive Web Design:** Tampilan aplikasi harus menyesuaikan ukuran layar perangkat secara fleksibel. Penggunaan oleh *Siswa* dan *Wali Murid* dioptimalkan untuk tampilan mobile (*Smartphone*), sedangkan untuk *Admin, Wali Kelas,* dan *Guru Piket* dioptimalkan untuk tampilan layar Desktop/Tablet.
+* **Responsive Web Design:** The application display must flexibly adapt to device screen sizes. Usage by Students and Guardians is optimized for mobile display (Smartphone), while Admin, Homeroom Teacher, and Duty Teacher usage is optimized for Desktop/Tablet display.
 
-3. ### **Keamanan & Autentikasi (*Security*)**
+3. ### **Security & Authentication**
 
-* **Sesi Akses Aman:** Autentikasi SSO didukung oleh sistem tokenisasi yang aman untuk mencegah manipulasi sesi login.  
-* **Restriksi Hak Akses:** Sistem harus memastikan bahwa pengguna tidak dapat mengakses URL atau memanipulasi data di luar hak akses peran (*role*) mereka melalui proteksi *middleware* di tingkat kode Laravel.
+* **Secure Access Session:** SSO authentication is supported by a secure tokenization system to prevent login session manipulation.  
+* **Access Rights Restriction:** The system must ensure that users cannot access URLs or manipulate data beyond their role access rights through middleware protection at the Laravel code level.
 
-4. ### **Keandalan & Ekspor Data (*Reliability & Output*)**
+4. ### **Reliability & Data Export**
 
-* **Kompatibilitas Ekspor Laporan:** Seluruh laporan rekapitulasi (Harian, Bulanan, Semester) pada level Admin, Wali Kelas, dan Guru Piket harus dapat diunduh secara akurat ke dalam format dokumen universal, yaitu **PDF** (untuk dokumen cetak resmi) dan **Excel** (untuk pengolahan data lanjutan).  
-* **Kesiapan Server Internal:** Sistem harus dapat berjalan stabil pada infrastruktur *server* lokal/mandiri milik instansi dengan sistem penyimpanan berbasis SSD/NVMe untuk menjamin kecepatan tulis data (*I/O operations*) dokumen Base64 gambar presensi.
+* **Report Export Compatibility:** All recap reports (Daily, Monthly, Semester) at Admin, Homeroom Teacher, and Duty Teacher levels must be accurately downloadable into universal document formats: **PDF** (for official printed documents) and **Excel** (for further data processing).  
+* **Internal Server Readiness:** The system must run stably on the institution's local/standalone server infrastructure with SSD/NVMe-based storage to guarantee data write speed (I/O operations) for attendance image Base64 documents.

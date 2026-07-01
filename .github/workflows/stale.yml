@@ -17,10 +17,10 @@ jobs:
           exempt-all-labels: false
           exempt-issue-labels: pinned,security,bug,enhancement
           stale-issue-message: |
-            Isu ini sudah 60 hari tanpa aktivitas. Akan ditutup otomatis dalam 14 hari.
+            This issue has been inactive for 60 days. It will be automatically closed in 14 days.
           close-issue-message: |
-            Isu ditutup karena tidak ada aktivitas lanjutan.
+            This issue has been closed due to continued inactivity.
           stale-pr-message: |
-            PR ini sudah 60 hari tanpa aktivitas. Akan ditutup otomatis dalam 14 hari.
+            This PR has been inactive for 60 days. It will be automatically closed in 14 days.
           close-pr-message: |
-            PR ditutup karena tidak ada aktivitas lanjutan.
+            This PR has been closed due to continued inactivity.

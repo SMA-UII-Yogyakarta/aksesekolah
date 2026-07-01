@@ -1,127 +1,127 @@
-# Analisis Kebutuhan Sistem
+# System Requirement Analysis
 
-## Deskripsi Umum
+## General Description
 
-**SMART Absen SMA UII** adalah sistem informasi presensi siswa terintegrasi berbasis web responsif yang dirancang untuk mengotomatisasi, mengamankan, dan mensentralisasi pencatatan kehadiran siswa di lingkungan SMA UII.
+**SMART Absen SMA UII** is an integrated student attendance information system based on responsive web designed to automate, secure, and centralize student attendance recording at SMA UII.
 
-Sistem ini mengintegrasikan:
-- **Pelacakan lokasi** (Geolocation API)
-- **Pengambilan gambar biometrik** (WebRTC camera)
-- **Kompresi gambar client-side** untuk efisiensi bandwidth
-- **Single Sign-On (SSO)** sebagai fondasi identitas digital terpusat
+This system integrates:
+- **Location tracking** (Geolocation API)
+- **Biometric image capture** (WebRTC camera)
+- **Client-side image compression** for bandwidth efficiency
+- **Single Sign-On (SSO)** as the foundation of centralized digital identity
 
-### Target Beban
+### Load Target
 
-| Metrik | Nilai |
+| Metric | Value |
 |---|---|
-| Concurrent users (CCU) puncak | 750+ siswa |
-| Waktu puncak | 06:30 – 07:00 WIB |
-| Ukuran foto per siswa (setelah kompresi) | Maks 20 KB |
-| Total payload 760 siswa serentak | ~15,2 MB |
+| Peak concurrent users (CCU) | 750+ students |
+| Peak time | 06:30 – 07:00 WIB |
+| Photo size per student (after compression) | Max 20 KB |
+| Total payload for 760 simultaneous students | ~15.2 MB |
 
 ---
 
-## Kebutuhan Fungsional
+## Functional Requirements
 
-### 1. Modul Pintu Masuk — Universal SSO Portal
+### 1. Entry Module — Universal SSO Portal
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| F-01 | Sistem harus menyediakan satu portal autentikasi (login) tunggal untuk seluruh kategori pengguna |
-| F-02 | Sistem harus otomatis mendeteksi peran (role) setelah login berhasil dan mengarahkan ke dashboard masing-masing |
-| F-03 | Arsitektur login harus dirancang sebagai **Identity Provider (IdP)** menggunakan Laravel Sanctum agar dapat digunakan oleh aplikasi yayasan lain di masa depan |
+| F-01 | The system must provide a single authentication (login) portal for all user categories |
+| F-02 | The system must automatically detect the role after successful login and redirect to the respective dashboard |
+| F-03 | The login architecture must be designed as an **Identity Provider (IdP)** using Laravel Sanctum so it can be used by other foundation applications in the future |
 
-### 2. Modul Admin — Pengelola Pusat
+### 2. Admin Module — Central Manager
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| F-04 | **Manajemen Data Master:** CRUD satuan & bulk (Excel upload/download) untuk entitas Siswa, Guru, Wali Murid |
-| F-05 | **Enrolment Kelas:** Membuat kelas, menunjuk wali kelas, memasukkan siswa ke kelas secara bulk |
-| F-06 | **Manajemen Presensi & Izin:** Hak akses penuh CRUD untuk koreksi/override data kehadiran |
-| F-07 | **Dashboard Analitik (Drill-Down 4 Level):** Level 1 (sekolah) → Level 2 (per kelas) → Level 3 (per siswa) → Level 4 (detail by name) |
+| F-04 | **Master Data Management:** Single & bulk CRUD (Excel upload/download) for Students, Teachers, Guardians entities |
+| F-05 | **Class Enrolment:** Create classes, assign homeroom teachers, bulk enroll students into classes |
+| F-06 | **Attendance & Leave Management:** Full CRUD access rights for attendance data correction/override |
+| F-07 | **Analytic Dashboard (4-Level Drill-Down):** Level 1 (school) → Level 2 (per class) → Level 3 (per student) → Level 4 (detail by name) |
 
-### 3. Modul Siswa
+### 3. Student Module
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| F-08 | **Presensi Live:** Ambil selfie (wajib kamera) + kunci titik koordinat GPS real-time |
-| F-09 | **Laporan Pribadi:** Grafik dan rekap kehadiran mandiri filter Harian/Bulanan/Semester |
+| F-08 | **Live Attendance:** Take selfie (camera required) + lock real-time GPS coordinate point |
+| F-09 | **Personal Report:** Attendance charts and recap with Daily/Monthly/Semester filters |
 
-### 4. Modul Wali Murid
+### 4. Guardian Module
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| F-10 | **Multi-Profil Anak:** Satu akun dapat mengampu >1 siswa (kakak-beradik), dengan fitur switch-profile |
-| F-11 | **Pengajuan Izin Digital:** Form izin (Sakit/Acara/Lomba) + pilih anak + durasi + upload bukti (gambar/PDF) |
+| F-10 | **Multi-Child Profile:** One account can manage >1 student (siblings), with profile-switch feature |
+| F-11 | **Digital Leave Submission:** Leave form (Sick/Event/Competition) + select child + duration + upload evidence (image/PDF) |
 
-### 5. Modul Wali Kelas
+### 5. Homeroom Teacher Module
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| F-12 | **Panel Verifikasi Izin:** Notifikasi masuk pengajuan izin dari wali murid, dapat Approve/Reject |
-| F-13 | **Monitoring & Rekap Kelas:** Laporan kehadiran seluruh siswa di kelasnya (Harian/Bulanan/Semester) |
+| F-12 | **Leave Verification Panel:** Incoming leave submission notifications from guardians, can Approve/Reject |
+| F-13 | **Class Monitoring & Recap:** Attendance report for all students in their class (Daily/Monthly/Semester) |
 
-### 6. Modul Guru Piket
+### 6. Duty Teacher Module
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| F-14 | **Live Monitoring Filtered:** Rekap kehadiran seluruh siswa hari berjalan dengan filter cepat per kelas |
+| F-14 | **Live Monitoring Filtered:** Attendance recap of all students for the current day with quick filter per class |
 
 ---
 
-## Kebutuhan Non-Fungsional
+## Non-Functional Requirements
 
-### Performa
+### Performance
 
-| ID | Kebutuhan | Spesifikasi |
+| ID | Requirement | Specification |
 |---|---|---|
-| NF-01 | **Frontend Image Compression** | Resolusi 320x240, JPEG 90%, maks 20 KB per foto, via JavaScript Canvas API |
-| NF-02 | **Database max_connections** | Minimal 1000 koneksi serentak |
-| NF-03 | **Database Indexing** | Wajib pada kolom id_siswa, tanggal, status_kehadiran, nisn, nama |
-| NF-04 | **Storage Offloading** | Dilarang menyimpan BLOB/Base64 di database — gunakan URL ke Object Storage eksternal |
+| NF-01 | **Frontend Image Compression** | Resolution 320x240, JPEG 90%, max 20 KB per photo, via JavaScript Canvas API |
+| NF-02 | **Database max_connections** | Minimum 1000 concurrent connections |
+| NF-03 | **Database Indexing** | Required on columns id_student, date, attendance_status, nisn, name |
+| NF-04 | **Storage Offloading** | Prohibited from storing BLOB/Base64 in the database — use URL to external Object Storage |
 
 ### Usability
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| NF-05 | **Responsive Web Design** — Siswa & Wali Murid dioptimalkan untuk mobile; Admin, Guru untuk desktop |
-| NF-06 | **Tanpa instalasi** — cukup browser, tidak perlu unduh dari Play Store/App Store |
-| NF-07 | **Pembaruan instan** — setiap perubahan langsung tersedia tanpa update manual |
+| NF-05 | **Responsive Web Design** — Students & Guardians optimized for mobile; Admin, Teachers for desktop |
+| NF-06 | **No installation** — just a browser, no need to download from Play Store/App Store |
+| NF-07 | **Instant updates** — every change is immediately available without manual updates |
 
-### Keamanan
+### Security
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| NF-08 | **SSO Tokenization** — sistem token yang aman untuk mencegah manipulasi sesi login |
-| NF-09 | **Role-based middleware** — pengguna tidak bisa mengakses URL/memanipulasi data di luar hak aksesnya |
-| NF-10 | **Validasi Tiga Lapis (Triple-Layer)** sebelum menyimpan presensi — lihat dokumen keamanan |
+| NF-08 | **SSO Tokenization** — secure token system to prevent login session manipulation |
+| NF-09 | **Role-based middleware** — users cannot access URLs/manipulate data outside their access rights |
+| NF-10 | **Triple-Layer Validation** before saving attendance — see security document |
 
-### Keandalan
+### Reliability
 
-| ID | Kebutuhan |
+| ID | Requirement |
 |---|---|
-| NF-11 | **Ekspor PDF & Excel** untuk laporan Harian/Bulanan/Semester |
-| NF-12 | **Server SSD/NVMe** untuk menjamin kecepatan I/O |
+| NF-11 | **PDF & Excel export** for Daily/Monthly/Semester reports |
+| NF-12 | **SSD/NVMe server** to ensure I/O speed |
 
 ---
 
-## Matriks Role vs Fitur
+## Role vs Feature Matrix
 
-| Fitur | Admin | Siswa | Wali Murid | Wali Kelas | Guru Piket |
+| Feature | Admin | Student | Guardian | Homeroom Teacher | Duty Teacher |
 |---|---|---|---|---|---|
-| Login SSO | ✅ | ✅ | ✅ | ✅ | ✅ |
+| SSO Login | ✅ | ✅ | ✅ | ✅ | ✅ |
 | CRUD Master Data | ✅ | — | — | — | — |
 | Upload/Download Excel | ✅ | — | — | — | — |
-| Enrolment Kelas | ✅ | — | — | — | — |
-| Atur Jam Presensi | ✅ | — | — | — | — |
-| Atur Kalender Libur | ✅ | — | — | — | — |
-| Presensi Live (Selfie+GPS) | — | ✅ | — | — | — |
-| Lihat Rekap Sendiri | ✅ | ✅ | — | — | — |
-| Multi-Profil Anak | — | — | ✅ | — | — |
-| Ajukan Izin | — | — | ✅ | — | — |
-| Verifikasi Izin | ✅ | — | — | ✅ | — |
-| Monitoring Kelas | ✅ | — | — | ✅ | ✅ |
-| Filter Cepat per Kelas | ✅ | — | — | ✅ | ✅ |
+| Class Enrolment | ✅ | — | — | — | — |
+| Configure Attendance Hours | ✅ | — | — | — | — |
+| Configure Holiday Calendar | ✅ | — | — | — | — |
+| Live Attendance (Selfie+GPS) | — | ✅ | — | — | — |
+| View Own Recap | ✅ | ✅ | — | — | — |
+| Multi-Child Profile | — | — | ✅ | — | — |
+| Submit Leave | — | — | ✅ | — | — |
+| Verify Leave | ✅ | — | — | ✅ | — |
+| Class Monitoring | ✅ | — | — | ✅ | ✅ |
+| Quick Filter per Class | ✅ | — | — | ✅ | ✅ |
 | Drill-Down Analytics | ✅ | — | — | — | — |
-| Ekspor PDF/Excel | ✅ | — | — | ✅ | ✅ |
+| Export PDF/Excel | ✅ | — | — | ✅ | ✅ |
 | Bypass/Override Data | ✅ | — | — | — | — |

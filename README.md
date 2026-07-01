@@ -2,12 +2,12 @@
   <img src="brief/ERD.png" alt="SMART Absen SMA UII" width="100%" style="max-width: 800px; border-radius: 12px;" />
 
   <h1>SMART Absen SMA UII</h1>
-  <p><strong>Sistem Presensi Digital Terintegrasi berbasis Web dengan Geolokasi & Biometrik Kamera</strong></p>
+  <p><strong>Integrated Digital Attendance System based on Web with Geolocation & Camera Biometrics</strong></p>
 
   <p align="center">
     <a href="https://SMA-UII-Yogyakarta.github.io/aksesekolah"><img src="https://img.shields.io/badge/🌐_docs-GitHub_Pages-2ea44f?style=flat-square" /></a>
-    <a href="docs/01-arsitektur-monorepo.md"><img src="https://img.shields.io/badge/arsitektur-monorepo-6C5CE7?style=flat-square" /></a>
-    <a href="docs/03-requirement-analisis.md"><img src="https://img.shields.io/badge/requirements-analisis-00B894?style=flat-square" /></a>
+    <a href="docs/01-arsitektur-monorepo.md"><img src="https://img.shields.io/badge/architecture-monorepo-6C5CE7?style=flat-square" /></a>
+    <a href="docs/03-requirement-analisis.md"><img src="https://img.shields.io/badge/requirements-analysis-00B894?style=flat-square" /></a>
     <a href="docs/04-erd-database.md"><img src="https://img.shields.io/badge/database-ERD-0984E3?style=flat-square" /></a>
     <a href="docs/08-budget-timeline-roadmap.md"><img src="https://img.shields.io/badge/budget-Rp_8,5jt-FDCB6E?style=flat-square" /></a>
     <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-d63031?style=flat-square" /></a>
@@ -16,35 +16,35 @@
 
 ---
 
-## Tentang Proyek
+## About the Project
 
-**SMART Absen SMA UII** adalah sistem informasi presensi siswa berbasis web responsif yang mengotomatisasi pencatatan kehadiran menggunakan teknologi:
+**SMART Absen SMA UII** is a responsive web-based student attendance information system that automates attendance recording using the following technologies:
 
-- **Geolocation API** — mengunci titik koordinat siswa saat presensi
-- **WebRTC / Kamera** — mengambil swafoto langsung (bukan dari galeri)
-- **Kompresi Client-Side** — gambar diperkecil hingga ≤20 KB sebelum dikirim
-- **Single Sign-On** — satu akun untuk seluruh ekosistem aplikasi SMA UII
+- **Geolocation API** — locks the student's coordinate point during attendance
+- **WebRTC / Camera** — takes a live selfie (not from gallery)
+- **Client-Side Compression** — images are compressed to ≤20 KB before sending
+- **Single Sign-On** — one account for the entire SMA UII application ecosystem
 
-Dirancang untuk menangani **750+ siswa konkuren** pada jam sibuk (06:30–07:00 WIB) di lingkungan **SMA UII Yogyakarta**.
+Designed to handle **750+ concurrent students** during peak hours (06:30–07:00 WIB) at **SMA UII Yogyakarta**.
 
-### Fitur Utama
+### Key Features
 
-| Modul | Pengguna | Fungsi |
+| Module | User | Function |
 |---|---|---|
-| Presensi Live | Siswa | Selfie + GPS → rekam kehadiran real-time |
-| Dashboard | Semua | Statistik & grafik sesuai peran |
-| Manajemen Data | Admin | CRUD + Excel bulk import/export |
-| Pengajuan Izin | Wali Murid | Ajukan izin sakit/acara/lomba + upload bukti |
-| Verifikasi Izin | Wali Kelas | Approve/reject izin siswa |
-| Monitoring | Guru Piket | Pantau kehadiran real-time per kelas |
-| Laporan | Admin/Guru | Export PDF & Excel harian/bulanan/semester |
-| Pengaturan | Admin | Atur jam presensi & kalender akademik |
+| Live Attendance | Student | Selfie + GPS → real-time attendance recording |
+| Dashboard | All | Statistics & charts based on role |
+| Data Management | Admin | CRUD + Excel bulk import/export |
+| Leave Submission | Guardian | Submit sick/event/competition leave + upload evidence |
+| Leave Verification | Homeroom Teacher | Approve/reject student leave |
+| Monitoring | Duty Teacher | Real-time attendance monitoring per class |
+| Reports | Admin/Teacher | PDF & Excel export daily/monthly/semester |
+| Settings | Admin | Configure attendance hours & academic calendar |
 
 ---
 
-## Arsitektur Monorepo
+## Monorepo Architecture
 
-Repositori ini adalah **entrypoint monorepo** yang menggunakan **git submodules** untuk memisahkan concern aplikasi:
+This repository is a **monorepo entrypoint** that uses **git submodules** to separate application concerns:
 
 ```
 smauii-aksesekolah/
@@ -52,47 +52,47 @@ smauii-aksesekolah/
 │   ├── backend/    →  core.git     (Laravel 13)
 │   ├── frontend/   →  webapp.git   (React/Vue)  [future]
 │   └── mobile/     →  flutter.git  (Android/iOS) [future]
-├── packages/       →  libraries internal SMA UII [future]
-├── brief/          →  dokumen perencanaan awal
-└── docs/           →  dokumentasi teknis lengkap
+├── packages/       →  SMA UII internal libraries [future]
+├── brief/          →  initial planning documents
+└── docs/           →  complete technical documentation
 ```
 
-| Repositori | URL | Keterangan |
+| Repository | URL | Description |
 |---|---|---|
-| `aksesekolah.git` | [`SMA-UII-Yogyakarta/aksesekolah`](https://github.com/SMA-UII-Yogyakarta/aksesekolah) | Monorepo ini |
-| `core.git` | [`SMA-UII-Yogyakarta/core`](https://github.com/SMA-UII-Yogyakarta/core) | Backend Laravel |
+| `aksesekolah.git` | [`SMA-UII-Yogyakarta/aksesekolah`](https://github.com/SMA-UII-Yogyakarta/aksesekolah) | This monorepo |
+| `core.git` | [`SMA-UII-Yogyakarta/core`](https://github.com/SMA-UII-Yogyakarta/core) | Laravel Backend |
 
 ---
 
-## Panduan Mulai Cepat
+## Quick Start Guide
 
-### Prasyarat
+### Prerequisites
 
 - [Laragon](https://laragon.org) 6.0+ (full stack web environment)
 - PHP 8.4+, PostgreSQL 16+, Composer, Bun
-- Git + SSH key terdaftar di GitHub
+- Git + SSH key registered on GitHub
 
-### Setup Backend
+### Backend Setup
 
 ```bash
-# Clone core ke Laragon
+# Clone core to Laragon
 cd C:\laragon\www
 git clone git@github.com:SMA-UII-Yogyakarta/core.git smauii-core
 
 # Install dependencies
 composer install
 
-# Konfigurasi environment
+# Environment configuration
 cp .env.example .env
 php artisan key:generate
 
-# Setup database & migrasi
+# Database setup & migration
 php artisan migrate --seed
 ```
 
-Buka `http://smauii-core.test` — aplikasi siap digunakan.
+Open `http://smauii-core.test` — application ready to use.
 
-### Setup Monorepo (untuk Maintainer)
+### Monorepo Setup (for Maintainer)
 
 ```bash
 git clone --recurse-submodules git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
@@ -100,34 +100,34 @@ git clone --recurse-submodules git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
 
 ---
 
-## Dokumentasi Online
+## Online Documentation
 
-Seluruh dokumentasi teknis tersedia dalam dua format:
+All technical documentation is available in two formats:
 
-| Format | URL | Keunggulan |
+| Format | URL | Advantage |
 |---|---|---|
-| **🌐 GitHub Pages** | [SMA-UII-Yogyakarta.github.io/aksesekolah](https://SMA-UII-Yogyakarta.github.io/aksesekolah) | Tampilan web responsif, navigasi mudah, cocok untuk *onboarding* & *handover* |
-| **📁 Markdown (repo)** | [`docs/`](docs/README.md) | Akses langsung dari GitHub, bisa diedit & di-*review* via PR |
+| **🌐 GitHub Pages** | [SMA-UII-Yogyakarta.github.io/aksesekolah](https://SMA-UII-Yogyakarta.github.io/aksesekolah) | Responsive web view, easy navigation, suitable for *onboarding* & *handover* |
+| **📁 Markdown (repo)** | [`docs/`](docs/README.md) | Direct access from GitHub, can be edited & reviewed via PR |
 
-### Daftar Dokumen
+### Document List
 
-| Dokumen | Isi |
+| Document | Content |
 |---|---|
-| [Arsitektur Monorepo](docs/01-arsitektur-monorepo.md) | Submodules, tata letak direktori, diagram |
-| [Lingkungan Development](docs/02-lingkungan-development.md) | Laragon, PHP 8.4, PostgreSQL 16, troubleshooting |
-| [Analisis Kebutuhan](docs/03-requirement-analisis.md) | Fungsional (14 fitur) + Non-fungsional (12 item) |
-| [ERD & Database](docs/04-erd-database.md) | 10 tabel, indexing strategy, SQL DDL |
-| [Modul & Alur Flow](docs/05-modul-alur-flow.md) | Skenario lengkap tiap peran |
-| [Keamanan & SSO](docs/06-keamanan-sso.md) | Sanctum, RBAC, Triple-Layer Validation |
+| [Monorepo Architecture](docs/01-arsitektur-monorepo.md) | Submodules, directory layout, diagrams |
+| [Development Environment](docs/02-lingkungan-development.md) | Laragon, PHP 8.4, PostgreSQL 16, troubleshooting |
+| [Requirement Analysis](docs/03-requirement-analisis.md) | Functional (14 features) + Non-functional (12 items) |
+| [ERD & Database](docs/04-erd-database.md) | 10 tables, indexing strategy, SQL DDL |
+| [Module & Flow](docs/05-modul-alur-flow.md) | Complete scenarios for each role |
+| [Security & SSO](docs/06-keamanan-sso.md) | Sanctum, RBAC, Triple-Layer Validation |
 | [Git Workflow](docs/07-git-workflow-submodule.md) | Branching, submodule management, CI |
-| [Budget & Timeline](docs/08-budget-timeline-roadmap.md) | Rp 8,5jt, 8 minggu, roadmap 3 fase |
+| [Budget & Timeline](docs/08-budget-timeline-roadmap.md) | Rp 8.5 million, 8 weeks, 3-phase roadmap |
 | [Deployment](docs/09-deployment-infrastruktur.md) | VPS, Nginx, tuning, object storage |
 
 ---
 
 ## Tech Stack
 
-| Layer | Teknologi |
+| Layer | Technology |
 |---|---|
 | **Backend** | PHP 8.4 / Laravel 13 |
 | **Database** | PostgreSQL 16 (NeonDB) |
@@ -139,11 +139,11 @@ Seluruh dokumentasi teknis tersedia dalam dua format:
 
 ---
 
-## Lisensi
+## License
 
-Proyek ini dikembangkan oleh **PT Koneksi Jaringan Indonesia** (*Software House — Agency Koneksi Digital*) sebagai mitra resmi pengembangan teknologi informasi **SMA UII Yogyakarta** dan dilisensikan di bawah lisensi MIT.
+This project is developed by **PT Koneksi Jaringan Indonesia** (*Software House — Agency Koneksi Digital*) as the official information technology development partner of **SMA UII Yogyakarta** and is licensed under the MIT license.
 
-> **Hak Cipta** — Source code © 2025–2026 PT Koneksi Jaringan Indonesia. Hak cipta dilindungi undang-undang. Source code disediakan untuk keperluan operasional SMA UII Yogyakarta. **DILARANG** memperjualbelikan, mendistribusikan ulang, atau menggunakan di luar lingkungan SMA UII Yogyakarta tanpa izin tertulis dari PT Koneksi Jaringan Indonesia dan SMA UII Yogyakarta. Kredit tetap milik PT Koneksi Jaringan Indonesia untuk menjaga otentisitas dan mencegah perjualbelian ilegal pihak ketiga di luar kesepakatan.
+> **Copyright** — Source code © 2025–2026 PT Koneksi Jaringan Indonesia. All rights reserved. Source code is provided for the operational purposes of SMA UII Yogyakarta. **PROHIBITED** from selling, redistributing, or using outside the SMA UII Yogyakarta environment without written permission from PT Koneksi Jaringan Indonesia and SMA UII Yogyakarta. Credit remains with PT Koneksi Jaringan Indonesia to maintain authenticity and prevent illegal third-party selling outside the agreement.
 
 ---
 
@@ -162,6 +162,6 @@ Proyek ini dikembangkan oleh **PT Koneksi Jaringan Indonesia** (*Software House 
     <a href="https://www.instagram.com/smauiiofficial/">📸 Instagram</a> ·
     <a href="https://www.youtube.com/channel/UCaLhqaoGXpLHK-KlTwiS8aw">▶️ YouTube</a> ·
     <a href="https://www.tiktok.com/@smauiiofficial">🎵 TikTok</a> ·
-    <a href="https://SMA-UII-Yogyakarta.github.io/aksesekolah">🌐 Dokumentasi Online</a>
+    <a href="https://SMA-UII-Yogyakarta.github.io/aksesekolah">🌐 Online Documentation</a>
   </p>
 </div>

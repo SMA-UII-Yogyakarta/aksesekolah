@@ -1,22 +1,22 @@
 # Agent Rules — SMART Absen SMA UII
 
-## Aturan Umum
-- Gunakan bahasa Indonesia dalam percakapan dan dokumentasi (kecuali kode)
-- Jawab dengan ringkas, langsung ke titik — tidak perlu preamble/penjelasan panjang
-- Jika diminta membuat kode, ikuti pattern yang sudah ada di project
-- Jangan menambahkan komentar di kode kecuali diminta
-- Jangan hapus informasi atau kredit yang sudah ada
-- Jika ragu tentang arsitektur, tanyakan dulu sebelum coding
+## General Rules
+- Use English for all code, comments, documentation, and communication
+- Answer concisely, straight to the point — no preamble/long explanations
+- When asked to write code, follow existing patterns in the project
+- Do not add comments to code unless asked
+- Do not remove existing information or credits
+- If unsure about architecture, ask before coding
 
-## Konvensi Commit
+## Commit Convention
 ```
-feat:      Fitur baru
-fix:       Perbaikan bug
-docs:      Dokumentasi
-chore:     Maintenance (dependensi, CI, config)
-refactor:  Refaktor kode (tanpa perubahan fungsional)
-style:     Perbaikan coding style (Pint otomatis)
-test:      Penambahan test
+feat:     New feature
+fix:      Bug fix
+docs:     Documentation
+chore:    Maintenance (dependencies, CI, config)
+refactor: Code refactoring (no functional changes)
+style:    Coding style fixes (Pint auto)
+test:     Adding tests
 ```
 
 ## Branching

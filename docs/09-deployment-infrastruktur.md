@@ -1,16 +1,16 @@
-# Deployment & Infrastruktur
+# Deployment & Infrastructure
 
-## Arsitektur Infrastruktur
+## Infrastructure Architecture
 
-### Diagram High-Level
+### High-Level Diagram
 
 ```
 ┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
 │   Browser    │────>│  VPS Server  │────>│  NeonDB          │
-│  (siswa,     │     │  (Nginx/     │     │  (PostgreSQL 16) │
-│   guru, dll) │     │   PHP-FPM)   │     │  serverless      │
-└──────────────┘     │  Laravel     │     └──────────────────┘
-                     │              │
+│  (students,  │     │  (Nginx/     │     │  (PostgreSQL 16) │
+│   teachers,  │     │   PHP-FPM)   │     │  serverless      │
+│   etc.)      │     │  Laravel     │     └──────────────────┘
+└──────────────┘     │              │
                      └──────┬───────┘
                             │
                             ▼
@@ -21,30 +21,30 @@
                      └──────────────┘
 ```
 
-### Spesifikasi VPS Minimum
+### Minimum VPS Specifications
 
-| Komponen | Spesifikasi | Catatan |
+| Component | Specification | Notes |
 |---|---|---|
-| CPU | Minimal 4 Core | Untuk menangani 750+ CCU |
-| RAM | Minimal 8 GB | Laravel + PostgreSQL cukup berat |
-| Storage | 100 GB SSD/NVMe | Kecepatan I/O kritis untuk presensi |
+| CPU | Minimum 4 Core | To handle 750+ CCU |
+| RAM | Minimum 8 GB | Laravel + PostgreSQL is quite heavy |
+| Storage | 100 GB SSD/NVMe | I/O speed critical for attendance |
 | Bandwidth | 1 Gbps | Peak traffic 06:30-07:00 |
 | OS | Ubuntu 24.04 LTS | — |
 
-### Stack Server Produksi
+### Production Server Stack
 
-| Layer | Teknologi | Alasan |
+| Layer | Technology | Reason |
 |---|---|---|
-| **Web Server** | Nginx + PHP-FPM | Lebih ringan dari Apache untuk production |
-| **PHP** | 8.4+ | Stabil, kompatibel dengan Laravel 13 |
-| **Database** | PostgreSQL 16 via NeonDB | Serverless, auto-scaling, branching, PgBouncer built-in |
-| **Cache** | Redis | Untuk session, cache, queue |
-| **Queue** | Redis + Laravel Queue | Untuk background job (upload foto, dll) |
+| **Web Server** | Nginx + PHP-FPM | Lighter than Apache for production |
+| **PHP** | 8.4+ | Stable, compatible with Laravel 13 |
+| **Database** | PostgreSQL 16 via NeonDB | Serverless, auto-scaling, branching, built-in PgBouncer |
+| **Cache** | Redis | For session, cache, queue |
+| **Queue** | Redis + Laravel Queue | For background jobs (photo upload, etc.) |
 | **Object Storage** | MinIO / Wasabi / Backblaze B2 | S3-compatible |
 
 ---
 
-## Konfigurasi Server
+## Server Configuration
 
 ### Nginx Virtual Host
 
@@ -81,9 +81,9 @@ server {
 }
 ```
 
-### Tuning PostgreSQL (Production)
+### PostgreSQL Tuning (Production)
 
-NeonDB menangani tuning server-side secara otomatis. Untuk self-managed PostgreSQL:
+NeonDB handles tuning server-side automatically. For self-managed PostgreSQL:
 
 ```ini
 # postgresql.conf
@@ -113,7 +113,7 @@ pm.max_requests = 500
 
 ## Object Storage
 
-### Arsitektur
+### Architecture
 
 ```
 [Laravel App]
@@ -122,17 +122,17 @@ pm.max_requests = 500
     │       │
     │       ▼
     │   [Object Storage]
-    │       ├── presensi/{tahun}/{bulan}/{nis}_{timestamp}.jpg
-    │       └── izin/{tahun}/{bulan}/{id_izin}_{dokumen}.pdf
+    │       ├── attendances/{year}/{month}/{nis}_{timestamp}.jpg
+    │       └── leave_requests/{year}/{month}/{id_leave}_{document}.pdf
     │
-    └── Simpan URL ke database (foto_url, bukti_dokumen_url)
+    └── Save URL to database (photo_url, evidence_url)
 ```
 
-### Struktur Direktori Object Storage
+### Object Storage Directory Structure
 
 ```
 bucket-smauii/
-├── presensi/
+├── attendances/
 │   ├── 2026/
 │   │   ├── 06/
 │   │   │   ├── 12345_20260622_064512.jpg
@@ -140,26 +140,26 @@ bucket-smauii/
 │   │   │   └── ...
 │   │   └── ...
 │   └── ...
-├── izin/
+├── leave_requests/
 │   ├── 2026/
 │   │   ├── 06/
-│   │   │   ├── IZ001_surat_dokter.pdf
+│   │   │   ├── IZ001_doctor_letter.pdf
 │   │   │   └── ...
 │   │   └── ...
 │   └── ...
-└── temp/  ← untuk file sementara sebelum divalidasi
+└── temp/  ← for temporary files before validation
 ```
 
 ### Provider Recommendations
 
-| Provider | Harga | Kapasitas | Keterangan |
+| Provider | Price | Capacity | Notes |
 |---|---|---|---|
-| **Wasabi** | ~$7/TB/bulan | Unlimited | Hot storage, tidak ada biaya egress |
-| **Backblaze B2** | ~$6/TB/bulan | Unlimited | Ekonomis, ada biaya download |
-| **Cloudflare R2** | ~$0.015/GB/bulan | Unlimited | Tidak ada biaya egress |
-| **MinIO (self-hosted)** | Gratis | Tergantung server | Untuk on-premise |
+| **Wasabi** | ~$7/TB/month | Unlimited | Hot storage, no egress fees |
+| **Backblaze B2** | ~$6/TB/month | Unlimited | Economical, download fees apply |
+| **Cloudflare R2** | ~$0.015/GB/month | Unlimited | No egress fees |
+| **MinIO (self-hosted)** | Free | Depends on server | For on-premise |
 
-### Integrasi Laravel
+### Laravel Integration
 
 ```php
 // config/filesystems.php
@@ -171,15 +171,15 @@ bucket-smauii/
         'region' => env('AWS_DEFAULT_REGION'),
         'bucket' => env('AWS_BUCKET'),
         'url' => env('AWS_URL'),
-        'endpoint' => env('AWS_ENDPOINT'), // Penting untuk MinIO/S3-compatible
+        'endpoint' => env('AWS_ENDPOINT'), // Important for MinIO/S3-compatible
         'use_path_style_endpoint' => true,
     ],
 ],
 
-// Contoh upload
-$path = $request->file('foto')->storeAs(
-    'presensi/' . now()->format('Y/m'),
-    $siswa->nis . '_' . now()->format('Ymd_His') . '.jpg',
+// Upload example
+$path = $request->file('photo')->storeAs(
+    'attendances/' . now()->format('Y/m'),
+    $student->nis . '_' . now()->format('Ymd_His') . '.jpg',
     's3'
 );
 ```
@@ -221,20 +221,20 @@ AWS_URL=https://smauii-presensi.s3.wasabisys.com
 
 ---
 
-## Checklist Deployment
+## Deployment Checklist
 
-- [ ] VPS sudah terinstall Ubuntu 24.04 LTS
-- [ ] Nginx + PHP 8.4 + PostgreSQL 16 sudah terinstall
-- [ ] Redis sudah terinstall dan berjalan
-- [ ] SSL certificate sudah aktif (Let's Encrypt / manual)
-- [ ] Domain `absen.smauii.sch.id` sudah mengarah ke IP VPS
-- [ ] Object Storage bucket sudah dibuat dan terkonfigurasi
-- [ ] Environment variables production sudah diset
-- [ ] `APP_DEBUG=false` dan `APP_ENV=production`
-- [ ] `APP_KEY` sudah digenerate
-- [ ] Migrasi database sudah dijalankan
-- [ ] Queue worker sudah berjalan: `php artisan queue:work`
-- [ ] Cache sudah dioptimasi: `php artisan optimize`
-- [ ] Storage link sudah dibuat: `php artisan storage:link`
-- [ ] Backup database sudah dikonfigurasi (cron job)
-- [ ] Monitoring server (uptime, CPU, RAM, disk) sudah aktif
+- [ ] VPS has Ubuntu 24.04 LTS installed
+- [ ] Nginx + PHP 8.4 + PostgreSQL 16 installed
+- [ ] Redis installed and running
+- [ ] SSL certificate active (Let's Encrypt / manual)
+- [ ] Domain `absen.smauii.sch.id` points to VPS IP
+- [ ] Object Storage bucket created and configured
+- [ ] Production environment variables set
+- [ ] `APP_DEBUG=false` and `APP_ENV=production`
+- [ ] `APP_KEY` generated
+- [ ] Database migrations already run
+- [ ] Queue worker running: `php artisan queue:work`
+- [ ] Cache optimized: `php artisan optimize`
+- [ ] Storage link created: `php artisan storage:link`
+- [ ] Database backup configured (cron job)
+- [ ] Server monitoring (uptime, CPU, RAM, disk) active

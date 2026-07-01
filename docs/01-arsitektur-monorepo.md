@@ -1,28 +1,28 @@
-# Arsitektur Monorepo & Tata Letak Direktori
+# Monorepo Architecture & Directory Layout
 
-## Filosofi
+## Philosophy
 
-Repositori `aksesekolah.git` dirancang sebagai **monorepo entrypoint** — sebuah repositori pusat yang menjadi pintu masuk tunggal bagi seluruh ekosistem aplikasi SMA UII. Monorepo ini tidak menyimpan kode aplikasi secara langsung, melainkan menggunakan **Git Submodules** untuk merujuk ke repositori aplikasi yang terpisah.
+The `aksesekolah.git` repository is designed as a **monorepo entrypoint** — a central repository that serves as the single entry point for the entire SMA UII application ecosystem. This monorepo does not store application code directly, but instead uses **Git Submodules** to reference separate application repositories.
 
-Pendekatan ini memberikan keseimbangan antara:
-- **Isolasi teknis** — setiap sub-proyek memiliki siklus rilis, dependency, dan timnya sendiri
-- **Visibilitas organisasi** — semua proyek terlihat dari satu titik masuk
-- **Skalabilitas** — ketika ekosistem tumbuh, submodule baru dapat ditambahkan tanpa mengganggu yang lain
+This approach provides a balance between:
+- **Technical isolation** — each sub-project has its own release cycle, dependencies, and team
+- **Organizational visibility** — all projects are visible from a single entry point
+- **Scalability** — as the ecosystem grows, new submodules can be added without disrupting others
 
-## Struktur Direktori
+## Directory Structure
 
 ```
 smauii-aksesekolah/                        ← origin: git@github.com:SMA-UII-Yogyakarta/aksesekolah.git
 │
-├── brief/                                 ← Dokumen perencanaan awal (tidak berubah)
+├── brief/                                 ← Initial planning documents (unchanged)
 │   ├── SMART Absen SMA UII.md
 │   ├── LAPORAN ANALISIS KEBUTUHAN SISTEM.md
 │   ├── Rencana ERD.md
 │   └── ERD.png
 │
-├── docs/                                  ← Dokumentasi teknis untuk tim/maintainer
-│   ├── README.md                          ← Indeks dokumentasi
-│   ├── 01-arsitektur-monorepo.md          ← [dokumen ini]
+├── docs/                                  ← Technical documentation for team/maintainers
+│   ├── README.md                          ← Documentation index
+│   ├── 01-arsitektur-monorepo.md          ← [this document]
 │   ├── 02-lingkungan-development.md
 │   ├── 03-requirement-analisis.md
 │   ├── 04-erd-database.md
@@ -32,61 +32,61 @@ smauii-aksesekolah/                        ← origin: git@github.com:SMA-UII-Yo
 │   ├── 08-budget-timeline-roadmap.md
 │   └── 09-deployment-infrastruktur.md
 │
-├── apps/                                  ← Submodul aplikasi
+├── apps/                                  ← Application submodules
 │   ├── backend/                           ← submodule → git@github.com:SMA-UII-Yogyakarta/core.git
-│   │                                          Backend Laravel (implementasi utama)
+│   │                                          Laravel backend (main implementation)
 │   │
 │   ├── frontend/                          ← submodule → git@github.com:SMA-UII-Yogyakarta/webapp.git
-│   │                                          Frontend terpisah (Next.js)
-│   │                                          [FUTURE - belum diaktifkan — Fase 2]
+│   │                                          Separate frontend (Next.js)
+│   │                                          [FUTURE - not yet active — Phase 2]
 │   │
 │   ├── mobile/                            ← submodule → git@github.com:SMA-UII-Yogyakarta/flutter.git
-│   │                                          Mobile app native (Android/iOS)
-│   │                                          [FUTURE - belum diaktifkan]
+│   │                                          Native mobile app (Android/iOS)
+│   │                                          [FUTURE - not yet active]
 │   │
-│   └── ...                                ← Submodul lain sesuai kebutuhan:
+│   └── ...                                ← Other submodules as needed:
 │                                              - API serverless (Hono/Bun, NestJS)
 │                                              - Gateway/Proxy service
 │                                              - Background worker service
-│                                              dll.
+│                                              etc.
 │
-├── packages/                              ← Submodul utilitas internal SMA UII
-│   │                                         Library bersama yang digunakan antar aplikasi
-│   │                                         (misal: package Laravel custom, helper traits, dll.)
-│   └── ...                                ← [FUTURE - belum diisi]
+├── packages/                              ← Internal SMA UII utility submodules
+│   │                                         Shared libraries used across applications
+│   │                                         (e.g., custom Laravel packages, helper traits, etc.)
+│   └── ...                                ← [FUTURE - not yet populated]
 │
 ├── .gitignore
 ├── .gitmodules
 └── README.md
 ```
 
-## Diagram Alur Submodule
+## Submodule Flow Diagram
 
 ```mermaid
 graph TD
     A[aksesekolah.git<br/>monorepo entrypoint] --> B[apps/backend<br/>core.git]
     A --> C[apps/frontend<br/>webapp.git]
     A --> D[apps/mobile<br/>flutter.git]
-    A --> E[apps/*<br/>service lain]
+    A --> E[apps/*<br/>other services]
     A --> F[packages/*<br/>internal libraries]
 
-    B --> G[C:laragonwwwsmauii-core<br/>clone langsung untuk dev]
-    G -.->|workflow harian| B
+    B --> G[C:laragonwwwsmauii-core<br/>direct clone for dev]
+    G -.->|daily workflow| B
 ```
 
-## Alur Kerja Developer
+## Developer Workflow
 
-### Untuk Backend Developer (Laravel)
+### For Backend Developer (Laravel)
 
-1. Clone `core.git` langsung ke `C:\laragon\www\smauii-core`:
+1. Clone `core.git` directly to `C:\laragon\www\smauii-core`:
    ```bash
    git clone git@github.com:SMA-UII-Yogyakarta/core.git C:\laragon\www\smauii-core
    ```
 
-2. Kerja seperti biasa di folder `smauii-core` — Laragon akan otomatis mengenali dan
-   menyediakan akses via `http://smauii-core.test`
+2. Work as usual in the `smauii-core` folder — Laragon will automatically recognize and
+   provide access via `http://smauii-core.test`
 
-3. Dari monorepo `aksesekolah`, update submodule `apps/backend` agar sinkron:
+3. From the `aksesekolah` monorepo, update the `apps/backend` submodule to keep it in sync:
    ```bash
    cd C:\laragon\www\smauii-aksesekolah
    git submodule update --remote apps/backend
@@ -95,14 +95,14 @@ graph TD
    git push
    ```
 
-### Untuk Developer Lain (Frontend/Mobile)
+### For Other Developers (Frontend/Mobile)
 
-- Cukup clone repositori masing-masing secara mandiri
-- Monorepo tetap menjadi *entrypoint* untuk mengetahui semua proyek yang sedang berjalan
+- Simply clone each repository independently
+- The monorepo remains the *entrypoint* to know about all ongoing projects
 
-## Keuntungan Arsitektur Ini
+## Advantages of This Architecture
 
-1. **Entrypoint tunggal** untuk orientasi anggota tim baru
-2. **Submodule isolation** — tiap repositori punya riwayat dan issue tracker sendiri
-3. **Perubahan arsitektur minim** — menambah/menghapus submodule tidak mengganggu submodule lain
-4. **Fleksibel** — ketika monorepo dirasa tidak lagi cocok, submodule dapat diputus tanpa kehilangan sejarah
+1. **Single entrypoint** for new team member orientation
+2. **Submodule isolation** — each repository has its own history and issue tracker
+3. **Minimal architectural changes** — adding/removing submodules does not affect others
+4. **Flexible** — when monorepo is no longer suitable, submodules can be detached without losing history

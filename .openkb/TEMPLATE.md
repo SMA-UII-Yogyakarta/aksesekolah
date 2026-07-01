@@ -1,23 +1,23 @@
 # 📚 OpenKB — Open Knowledge Base
 
-**OpenKB** adalah direktori knowledge base personal untuk komunikasi dengan AI Agent (Opencode, Claude Code, Claw Code, Cursor). Setiap anggota tim memiliki folder personal sendiri yang **tidak di-track git** agar bebas menulis catatan, instruksi personal, dan log sesi AI.
+**OpenKB** is a personal knowledge base directory for communication with AI Agents (Opencode, Claude Code, Claw Code, Cursor). Each team member has their own personal folder that is **not git-tracked** so they are free to write notes, personal instructions, and AI session logs.
 
-Role-specific instructions di-load dari **playbook/ROLES/** — lihat `../smauii-playbook/ROLES/` untuk daftar role yang tersedia.
+Role-specific instructions are loaded from **playbook/ROLES/** — see `../smauii-playbook/ROLES/` for available roles.
 
 ---
 
-## Struktur Folder
+## Folder Structure
 
 ```
-~/.openkb/                       ← Di HOME directory, bukan di repo
+~/.openkb/                       ← In HOME directory, not in repo
 ├── PERSONAL/
 │   └── <github-username>/
-│       ├── profile.md           ← "Siapa saya" — role, skill, preferensi
-│       ├── sessions/            ← Log percakapan dengan AI
+│       ├── profile.md           ← "Who I am" — role, skills, preferences
+│       ├── sessions/            ← Conversation logs with AI
 │       │   └── YYYY-MM-DD.md
-│       └── quick-notes.md       ← Catatan cepat / coding snippets
+│       └── quick-notes.md       ← Quick notes / coding snippets
 │
-├── ROLES/                       ← Copy dari playbook.git/ROLES/
+├── ROLES/                       ← Copy from playbook.git/ROLES/
 │   ├── product-analyst.md       ← Role-specific AI instructions
 │   ├── junior-backend.md        ← Role-specific AI instructions
 │   ├── junior-frontend.md       ← Role-specific AI instructions
@@ -25,107 +25,107 @@ Role-specific instructions di-load dari **playbook/ROLES/** — lihat `../smauii
 │   ├── project-manager.md       ← Role-specific AI instructions
 │   └── stakeholder.md           ← Role-specific AI instructions
 │
-└── PROJECTS/                    ← Catatan per project
+└── PROJECTS/                    ← Per-project notes
     └── smart-absen/
         ├── notes.md
         └── decisions.md
 ```
 
-## Cara Penggunaan
+## Usage Guide
 
-### 1. Setup Awal
+### 1. Initial Setup
 ```bash
-# Buat folder personal
+# Create personal folder
 mkdir ~\.openkb\PERSONAL\<github-username>
 mkdir ~\.openkb\PERSONAL\<github-username>\sessions
 mkdir ~\.openkb\ROLES
 mkdir ~\.openkb\PROJECTS\smart-absen
 
-# Copy role instructions dari playbook
-# (pilih sesuai role kamu saat ini)
+# Copy role instructions from playbook
+# (choose according to your current role)
 copy ..\smauii-playbook\ROLES\product-analyst.md ~\.openkb\ROLES\
 copy ..\smauii-playbook\ROLES\junior-backend.md ~\.openkb\ROLES\
 copy ..\smauii-playbook\ROLES\junior-frontend.md ~\.openkb\ROLES\
 ```
 
 ### 2. Profile (`profile.md`)
-Tulis tentang dirimu:
-- Nama & Role saat ini
-- Tech stack yang kamu kuasai
-- Area fokus di project ini
-- Preferensi coding style
-- Hal yang perlu dihindari AI saat membantu kamu
+Write about yourself:
+- Name & Current Role
+- Tech stack you master
+- Focus areas in this project
+- Coding style preferences
+- Things AI should avoid when helping you
 
 ### 3. Role (`ROLES/<role>.md`)
-Role-specific instructions dicopy dari `playbook.git/ROLES/`:
-- **Isi ROLES** sudah didefinisikan di playbook oleh Sandikodev
-- Kamu tinggal copy file role yang sesuai
-- Kalau role-mu berubah (misal: dari junior ke mid), tinggal ganti file role
-- Contoh: Hanif mulai sebagai Product Analyst, nanti bisa ganti ke UI/UX Designer
+Role-specific instructions are copied from `playbook.git/ROLES/`:
+- **ROLES content** is already defined in the playbook by Sandikodev
+- Just copy the appropriate role file
+- If your role changes (e.g., from junior to mid), just replace the role file
+- Example: Hanif starts as Product Analyst, later can switch to UI/UX Designer
 
 ### 4. Setup opencode.json (User-Level)
-Buat file `~\.config\opencode\opencode.json`:
+Create file `~\.config\opencode\opencode.json`:
 ```json
 {
-  "username": "github-username-anda",
+  "username": "your-github-username",
   "instructions": [
     "~/.openkb/PERSONAL/<user>/profile.md",
-    "~/.openkb/ROLES/<role-saat-ini>.md"
+    "~/.openkb/ROLES/<current-role>.md"
   ],
   "references": {
     "personal-notes": {
       "path": "~/.openkb/PROJECTS/smart-absen",
-      "description": "Catatan pribadi tentang project SMART Absen"
+      "description": "Personal notes about the SMART Absen project"
     }
   }
 }
 ```
 
 ### 5. Sessions (`sessions/YYYY-MM-DD.md`)
-Setelah ngobrol dengan AI, catat:
-- Apa yang dikerjakan
-- Keputusan penting
-- Hal yang perlu diingat untuk sesi berikutnya
+After chatting with AI, note down:
+- What was done
+- Important decisions
+- Things to remember for the next session
 
 ### 6. Quick Notes (`quick-notes.md`)
-Tempat menyimpan:
-- Snippet kode yang sering dipakai
-- Command terminal yang sering lupa
-- Checklist task harian
+Place to store:
+- Frequently used code snippets
+- Terminal commands you often forget
+- Daily task checklist
 
 ---
 
-## Integrasi dengan AI Agent Tools
+## Integration with AI Agent Tools
 
 ### Opencode
-File di `~/.openkb/` direferensikan di `~/.config/opencode/opencode.json` (user-level).
+Files in `~/.openkb/` are referenced in `~/.config/opencode/opencode.json` (user-level).
 
 ### Claude Code
-File `.claude/settings.json` di root repo membaca referensi yang sama.
+File `.claude/settings.json` in the repo root reads the same references.
 
 ### Cursor IDE
-File `.cursorrules` di root repo berisi konteks project.
+File `.cursorrules` in the repo root contains project context.
 
-### Semua tool membaca dari sumber yang sama:
-- **Project context**: `.opencode/SHARED/` di masing-masing repo
+### All tools read from the same sources:
+- **Project context**: `.opencode/SHARED/` in each repo
 - **Personal profile**: `~/.openkb/PERSONAL/<user>/profile.md`
 - **Role instructions**: `~/.openkb/ROLES/<role>.md`
 - **Knowledge base**: `playbook.git/`, `kaede-powerup.git/`
 
-Dengan arsitektur ini, AI Agent akan otomatis paham konteks project, role kamu, dan aturan main tim — apapun tool yang kamu pilih.
+With this architecture, the AI Agent will automatically understand the project context, your role, and team rules — regardless of which tool you choose.
 
 ---
 
-## Aturan
+## Rules
 
-1. **Folder `PERSONAL/` tidak boleh di-commit** — sudah ada di `.gitignore`
-2. File di `SHARED/` boleh diedit bersama via Pull Request
-3. **Role instructions** di `~/.openkb/ROLES/` — copy dari playbook.git, update sendiri sesuai role saat ini
-4. **Catatan project** di `~/.openkb/PROJECTS/<project>/` — untuk konteks yang tidak perlu dishare
-5. Gunakan markdown untuk semua file
-6. Bahasa Indonesia untuk catatan, Inggris untuk kode
+1. **`PERSONAL/` folder must not be committed** — already in `.gitignore`
+2. Files in `SHARED/` can be edited together via Pull Request
+3. **Role instructions** in `~/.openkb/ROLES/` — copy from playbook.git, update yourself according to current role
+4. **Project notes** in `~/.openkb/PROJECTS/<project>/` — for context that does not need to be shared
+5. Use markdown for all files
+6. Indonesian for notes, English for code
 
-## Referensi
+## References
 
 - **Role definitions**: `../smauii-playbook/ROLES/`
 - **AI workflow**: `../smauii-playbook/WORKFLOWS/ai-agent-workflow.md`

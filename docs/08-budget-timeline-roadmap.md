@@ -1,155 +1,155 @@
-# Rencana Anggaran, Timeline & Peta Jalan
+# Budget Plan, Timeline & Roadmap
 
-## Rencana Anggaran Biaya
+## Budget Plan
 
-### Total Estimasi: **Rp 8.500.000**
+### Total Estimate: **Rp 8,500,000**
 
-| Komponen | Deskripsi | Biaya |
+| Component | Description | Cost |
 |---|---|---|
-| **Arsitektur Database & SSO** | Perancangan ERD, relasi multi-user, fondasi login SSO mandiri | Rp 1.800.000 |
-| **Modul Presensi Utama** | Fitur akses kamera (swafoto) + penguncian titik koordinat GPS siswa | Rp 1.500.000 |
-| **Modul Admin & Master Data** | CRUD (single & bulk Excel) untuk data Siswa, Guru, Kelas | Rp 1.000.000 |
-| **Modul Guru Piket & Wali Kelas** | Filter monitoring real-time, sistem verifikasi izin, rekap kelas | Rp 1.000.000 |
-| **Modul UI/UX Siswa & Wali Murid** | Dashboard responsif, grafik kehadiran, form pengajuan izin | Rp 1.150.000 |
-| **Sewa Object Storage (1 tahun)** | 50–250 GB, S3-compatible | Rp 850.000 |
-| **Setup & Deployment Server** | Konfigurasi VPS, instalasi database, deployment aplikasi | Rp 1.200.000 |
+| **Database Architecture & SSO** | ERD design, multi-user relations, self-managed SSO login foundation | Rp 1,800,000 |
+| **Core Attendance Module** | Camera access feature (selfie) + GPS coordinate locking for students | Rp 1,500,000 |
+| **Admin & Master Data Module** | CRUD (single & bulk Excel) for Students, Teachers, Classes data | Rp 1,000,000 |
+| **Duty Teacher & Homeroom Teacher Module** | Real-time monitoring filter, leave verification system, class recap | Rp 1,000,000 |
+| **Student & Guardian UI/UX Module** | Responsive dashboard, attendance charts, leave submission form | Rp 1,150,000 |
+| **Object Storage Rental (1 year)** | 50–250 GB, S3-compatible | Rp 850,000 |
+| **Server Setup & Deployment** | VPS configuration, database installation, application deployment | Rp 1,200,000 |
 
-### Breakdown Object Storage
+### Object Storage Breakdown
 
-| Metrik | Nilai |
+| Metric | Value |
 |---|---|
-| Kapasitas | 50–250 GB |
-| Durasi | 1 tahun |
-| Estimasi foto per hari | 760 siswa × 20 KB = ~15 MB |
-| Estimasi per bulan | ~450 MB |
-| Estimasi per tahun | ~5.4 GB (masih aman di 50 GB) |
-| Penyedia rekomendasi | Wasabi, Backblaze B2, atau MinIO (self-hosted) |
+| Capacity | 50–250 GB |
+| Duration | 1 year |
+| Estimated photos per day | 760 students × 20 KB = ~15 MB |
+| Estimated per month | ~450 MB |
+| Estimated per year | ~5.4 GB (still safe at 50 GB) |
+| Recommended providers | Wasabi, Backblaze B2, or MinIO (self-hosted) |
 
 ---
 
-## Timeline Pengerjaan — 8 Minggu
+## Development Timeline — 8 Weeks
 
 ```
-Minggu       | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
-             |---|---|---|---|---|---|---|---|
-Analisis     |███|   |   |   |   |   |   |   |
-Wireframing  |   |███|   |   |   |   |   |   |
-Desain ERD   |   |███|   |   |   |   |   |   |
-Integrasi SSO|   |   |███|   |   |   |   |   |
-Server Setup |   |   |███|   |   |   |   |   |
-Admin CRUD   |   |   |   |███|   |   |   |   |
-Enrolment    |   |   |   |███|   |   |   |   |
-Presensi     |   |   |   |   |███|   |   |   |
-Guru Piket   |   |   |   |   |   |███|   |   |
-Integrasi    |   |   |   |   |   |███|   |   |
-Laporan      |   |   |   |   |   |   |███|   |
-Testing      |   |   |   |   |   |   |███|   |
-Mobile Opt   |   |   |   |   |   |   |███|   |
-Bug Fixing   |   |   |   |   |   |   |   |███|
-UAT          |   |   |   |   |   |   |   |███|
-Deploy       |   |   |   |   |   |   |   |███|
-Training     |   |   |   |   |   |   |   |███|
+Week           | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+               |---|---|---|---|---|---|---|---|
+Analysis       |███|   |   |   |   |   |   |   |
+Wireframing    |   |███|   |   |   |   |   |   |
+ERD Design     |   |███|   |   |   |   |   |   |
+SSO Integration|   |   |███|   |   |   |   |   |
+Server Setup   |   |   |███|   |   |   |   |   |
+Admin CRUD     |   |   |   |███|   |   |   |   |
+Enrolment      |   |   |   |███|   |   |   |   |
+Attendance     |   |   |   |   |███|   |   |   |
+Duty Teacher   |   |   |   |   |   |███|   |   |
+Integration    |   |   |   |   |   |███|   |   |
+Reports        |   |   |   |   |   |   |███|   |
+Testing        |   |   |   |   |   |   |███|   |
+Mobile Opt     |   |   |   |   |   |   |███|   |
+Bug Fixing     |   |   |   |   |   |   |   |███|
+UAT            |   |   |   |   |   |   |   |███|
+Deploy         |   |   |   |   |   |   |   |███|
+Training       |   |   |   |   |   |   |   |███|
 ```
 
-### Detail Mingguan
+### Weekly Details
 
-#### Minggu 1 — Analisis Kebutuhan ✅ (Selesai)
-- Wawancara stakeholder
-- Dokumentasi kebutuhan fungsional & non-fungsional
-- Analisis alur bisnis
+#### Week 1 — Requirement Analysis ✅ (Completed)
+- Stakeholder interviews
+- Functional & non-functional requirements documentation
+- Business process analysis
 
-#### Minggu 2 — Wireframing & ERD
-- Desain UI/UX wireframe untuk 13 interface
-- Finalisasi Entity Relationship Diagram
-- Review desain dengan tim
+#### Week 2 — Wireframing & ERD
+- UI/UX wireframe design for 13 interfaces
+- Finalize Entity Relationship Diagram
+- Design review with team
 
-#### Minggu 3 — SSO & Server
-- Implementasi SSO login dengan Laravel Sanctum
-- Setup server development
-- Setup Object Storage integration
+#### Week 3 — SSO & Server
+- SSO login implementation with Laravel Sanctum
+- Development server setup
+- Object Storage integration setup
 
-#### Minggu 4 — Admin Dashboard
-- CRUD master data (Siswa, Guru, Wali Murid)
-- Import/Export Excel
-- Enrolment kelas
+#### Week 4 — Admin Dashboard
+- Master data CRUD (Students, Teachers, Guardians)
+- Excel Import/Export
+- Class enrolment
 
-#### Minggu 5 — Modul Presensi
-- Integrasi kamera (WebRTC)
-- Integrasi geolokasi (Geolocation API)
-- Kompresi gambar client-side
+#### Week 5 — Attendance Module
+- Camera integration (WebRTC)
+- Geolocation integration (Geolocation API)
+- Client-side image compression
 - Triple-layer validation
 
-#### Minggu 6 — Guru Piket & Integrasi
-- Dashboard monitoring real-time
-- Filter kelas
-- Panel verifikasi izin
-- Integrasi sistem
+#### Week 6 — Duty Teacher & Integration
+- Real-time monitoring dashboard
+- Class filter
+- Leave verification panel
+- System integration
 
-#### Minggu 7 — Laporan & Testing
-- Export PDF/Excel
+#### Week 7 — Reports & Testing
+- PDF/Excel export
 - Internal testing
-- Optimalisasi mobile
+- Mobile optimization
 
-#### Minggu 8 — Finalisasi
+#### Week 8 — Finalization
 - Bug fixing
 - User Acceptance Testing (UAT)
-- Deployment server produksi
-- Pelatihan pengguna
+- Production server deployment
+- User training
 
 ---
 
-## Peta Jalan Masa Depan (Roadmap)
+## Future Roadmap
 
-### Fase 1: SSO sebagai Identity Provider Yayasan
+### Phase 1: SSO as Foundation Identity Provider
 
-Sistem login dari aplikasi ini akan dijadikan portal identitas utama. Ke depannya, semua aplikasi sekolah cukup menggunakan satu akun SSO.
+The login system from this application will be used as the main identity portal. In the future, all school applications will use a single SSO account.
 
 ```
-Target: Akhir Tahun 1
+Target: End of Year 1
 
 ┌─────────────────────────────────────────┐
 │            SSO Identity Provider         │
 │              (SMART Absen)               │
 ├─────────────────────────────────────────┤
 │  ● e-Learning                           │
-│  ● Sistem Keuangan / SPP                │
-│  ● Perpustakaan Digital                 │
-│  ● Aplikasi yayasan lainnya             │
+│  ● Financial / Tuition System           │
+│  ● Digital Library                      │
+│  ● Other foundation applications        │
 └─────────────────────────────────────────┘
 ```
 
-### Fase 2: "UII Satu Data" — Sentralisasi Data
+### Phase 2: "UII Satu Data" — Data Centralization
 
-Mewujudkan sentralisasi data untuk mencegah data ganda antar unit. Seluruh rekam jejak siswa dan guru terintegrasi pada satu ID.
+Realizing data centralization to prevent duplicate data across units. All student and teacher track records are integrated into one ID.
 
 ```
-Target: Akhir Tahun 2
+Target: End of Year 2
 
 ┌──────────────┐
-│   Satu ID    │  ← NISN/NIP sebagai identitas tunggal
+│   One ID     │  ← NISN/NIP as single identity
 └──────┬───────┘
        │
-       ├── Presensi
-       ├── Akademik (Nilai, Raport)
-       ├── Administrasi (SPP, Beasiswa)
-       ├── Perpustakaan
-       └── Ekstrakurikuler
+       ├── Attendance
+       ├── Academic (Grades, Report Cards)
+       ├── Administration (Tuition, Scholarships)
+       ├── Library
+       └── Extracurricular
 ```
 
-### Fase 3: Automasi & Teknologi Cerdas
+### Phase 3: Automation & Smart Technology
 
-| Fitur | Deskripsi |
+| Feature | Description |
 |---|---|
-| **Geofencing Radius** | Pembatasan radius lokasi otomatis — siswa hanya bisa presensi di dalam area sekolah |
-| **WhatsApp Gateway** | Notifikasi absensi real-time ke wali murid via WhatsApp |
-| **Face Recognition** | Verifikasi wajah otomatis dari foto presensi (AI/ML) |
-| **Mobile Native App** | Aplikasi Android/iOS native dengan dukungan offline |
+| **Geofencing Radius** | Automatic location radius restriction — students can only attend within the school area |
+| **WhatsApp Gateway** | Real-time attendance notifications to guardians via WhatsApp |
+| **Face Recognition** | Automatic face verification from attendance photos (AI/ML) |
+| **Mobile Native App** | Native Android/iOS application with offline support |
 
 ---
 
-## Catatan untuk Tim
+## Notes for the Team
 
-1. **Prioritas P0** harus selesai sebelum sistem bisa digunakan (SSO, Presensi, Admin)
-2. **Budget fleksibel** — komponen dapat disesuaikan jika ada perubahan scope
-3. **Timeline 8 minggu** adalah target ideal, bisa mundur jika ada kendala teknis
-4. **Dokumentasi** — setiap selesai modul, update dokumentasi di repositori ini
+1. **P0 Priority** must be completed before the system can be used (SSO, Attendance, Admin)
+2. **Budget is flexible** — components can be adjusted if scope changes
+3. **8-week timeline** is an ideal target, may be delayed if technical issues arise
+4. **Documentation** — after each module is completed, update the documentation in this repository
