@@ -5,12 +5,13 @@ Sistem presensi digital SMA UII Yogyakarta berbasis web dengan geolokasi, swafot
 
 ## Tech Stack
 - **Backend**: PHP 8.4 / Laravel 13 — repositori: `core.git`
-- **Database**: MySQL 8.0
+- **Frontend**: InertiaJS 3 + React 19 + TypeScript 5.7 + Tailwind CSS 4 + Vite 8
+- **Package Manager**: Bun (frontend), Composer (backend)
+- **Database**: PostgreSQL 16 via NeonDB (production), PostgreSQL 16 (local), SQLite (testing)
 - **Cache & Queue**: Redis / Database driver
 - **Object Storage**: S3-compatible (Wasabi / MinIO)
 - **Web Server**: Apache (dev) / Nginx (production)
-- **Frontend**: Blade + Tailwind CSS 4 + Vite
-- **Auth**: Laravel Sanctum (SSO / Identity Provider)
+- **Auth**: Laravel Sanctum + Spatie Laravel Permission (RBAC)
 
 ## Arsitektur
 ```
@@ -26,9 +27,10 @@ aksesekolah.git (monorepo entrypoint)
 | Person | Role | Repo Fokus |
 |---|---|---|
 | sandikodev | Project Manager | Semua repo |
-| Ahmad Hanif Hasan | Document Developer | brief/, docs/ |
-| Fathan Mubina | Junior Developer | core.git (backend) |
-| Ihsan | Junior Developer | core.git (backend) |
+| Ahmad Hanif Hasan | Product Analyst | brief/, docs/ |
+| Fathan Mubina | Junior Frontend Developer | core.git (Inertia+React) |
+| Ihsan | Junior Backend Developer | core.git (Laravel API) |
+| Azis | Learning Mentor | core.git, playbook (mentoring) |
 
 ## Database (10 tabel)
 - **Master**: users, siswa, guru, wali_murid, kelas

@@ -28,7 +28,7 @@ main → develop → feature/nama-fitur
 - `feature/*`: untuk development harian
 
 ## Laravel Conventions
-- Route: web.php untuk Blade, api.php untuk API Sanctum
+- Route: web.php untuk Inertia pages, api.php untuk API Sanctum
 - Controller: single action prefer method `__invoke` untuk simple case
 - Validation: Form Request class
 - Database: migration + seeder, jangan langsung edit SQL

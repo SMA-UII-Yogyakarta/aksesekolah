@@ -1,15 +1,16 @@
 # Cursor Rules — SMART Absen SMA UII (Monorepo Entrypoint)
 
 ## Project Context
-- Stack: Laravel 13, Livewire 3, Blade, Tailwind CSS 4, Vite, MySQL 8
-- Auth: Laravel Sanctum
+- Stack: Laravel 13, InertiaJS 3 + React 19 + TypeScript 5.7, Tailwind CSS 4, Vite 8, PostgreSQL 16 (NeonDB)
+- Auth: Laravel Sanctum + Spatie Laravel Permission
+- Package Manager: Bun (frontend), Composer (backend)
 - Architecture: Monorepo with submodules
 
 ## Code Style
 - PHP: PSR-12 (Laravel Pint)
-- Blade: Use components, no inline PHP logic
+- React: Functional components + hooks, TypeScript strict, no `any` unless necessary
 - CSS: Tailwind utility classes, no custom CSS unless necessary
-- JS: Alpine.js for interactivity, no jQuery
+- JS/TS: Bun for package management, no npm/yarn
 
 ## AI Behavior
 - When writing code, always check existing patterns first
@@ -19,10 +20,11 @@
 - Comments: only add if logic is non-obvious
 
 ## Conventions
-- Routes: web.php for Blade, api.php for Sanctum API
-- Controllers: single action __invoke for simple cases
+- Routes: web.php for Inertia pages, api.php for Sanctum API
+- Controllers: Inertia controller di `Controllers/Web/`, API controller di `Controllers/Api/`
+- Business Logic: `app/Services/` — controller hanya memanggil service
 - Validation: Form Request classes
-- Database: migrations + seeders
+- Database: migrations + seeders, PostgreSQL syntax
 - Eloquent: eager loading, scopes for common queries
 
 ## Role Context
@@ -30,6 +32,7 @@
 - Use references: docs/, .opencode/, .openkb/, ../smauii-playbook/
 
 ## Commands
-- npm run dev — Vite dev server
+- bun run dev — Vite dev server (bukan npm!)
+- bun run build — Production build
 - ./vendor/bin/pint — Laravel Pint (code style fix)
 - php artisan test — PHPUnit tests
