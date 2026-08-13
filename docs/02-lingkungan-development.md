@@ -87,13 +87,17 @@ All development for **SMART Absen SMA UII** is done on **Laragon 6.0.0** — a *
 | Node.js | 22.14.0 | `C:\laragon\bin\nodejs\node-v22.14.0-win-x64\` |
 | **Bun** | **latest** | `C:\Users\<user>\.bun\bin\bun.exe` (install: `powershell -c "irm bun.sh/install.ps1 | iex"`) |
 | Composer | latest (portable) | `C:\laragon\bin\composer\composer.phar` |
+| **RustFS** | **latest** | S3-compatible local storage (Primary, native kompatibel dengan `lerd`) |
+| MinIO | latest | S3-compatible local storage (Alternative/Optional) |
 | Redis | 5.0.14.1 | `C:\laragon\bin\redis\redis-x64-5.0.14.1\` |
 | Memcached | 1.6.8 | `C:\laragon\bin\memcached\memcached-1.6.8-win64-mingw\` |
 | pgAdmin / DBeaver | latest | GUI tools for PostgreSQL |
 | Git | (via Windows PATH) | `C:\Program Files\Git\cmd\git.EXE` |
 | GitHub CLI | 2.95.0 | `gh` |
 
-> **Note:** Use **Bun** for frontend package management (not npm). Bun is faster, has built-in TypeScript support, and is compatible with Vite 8.
+> **Note:** 
+> - Use **Bun** for frontend package management (not npm). Bun is faster, has built-in TypeScript support, and is compatible with Vite 8.
+> - Use **RustFS** for local S3 object storage (foto presensi & surat izin). RustFS native kompatibel dengan `lerd`, hemat memori, dan berkecepatan tinggi. MinIO dapat digunakan sebagai alternatif opsional.
 
 ---
 

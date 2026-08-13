@@ -40,7 +40,18 @@
 | **Database** | PostgreSQL 16 via NeonDB | Serverless, auto-scaling, branching, built-in PgBouncer |
 | **Cache** | Redis | For session, cache, queue |
 | **Queue** | Redis + Laravel Queue | For background jobs (photo upload, etc.) |
-| **Object Storage** | MinIO / Wasabi / Backblaze B2 | S3-compatible |
+| **Object Storage** | RustFS (Dev/Demo) / Cloudflare R2 / AWS S3 | S3-compatible, ultra-lightweight |
+
+### Ekosistem Digital Terpadu SMA UII Yogyakarta (Central IdP & Master Data)
+
+`smauii-core` bertindak sebagai Central Identity Provider (IdP) & Dapodik master data hub bagi seluruh platform digital sekolah:
+
+| Platform | Subdomain | Stack / Engine | Integrasi Data Master |
+|---|---|---|---|
+| **SMART Absen (Core)** | `preview.smauiiyk.sch.id` / `app.smauiiyk.sch.id` | Laravel 13 + React Inertia | Pusat data akun pengguna, role RBAC, rombel, & presensi |
+| **Moodle E-Learning** | `elearning.smauiiyk.sch.id` | Moodle (Container host) | SSO akun siswa/guru & sinkronisasi peserta kursus/mapel |
+| **SLiMS Perpustakaan** | `library.smauiiyk.sch.id` | SLiMS (Container host) | Sinkronisasi data keanggotaan perpustakaan (NIS/NIP) |
+| **Digital Lab & Research**| `lab.smauiiyk.sch.id` | Lab Management Portal | Autentikasi workstation & jadwal praktikum sains/TIK |
 
 ---
 
@@ -152,12 +163,13 @@ bucket-smauii/
 
 ### Provider Recommendations
 
-| Provider | Price | Capacity | Notes |
+| Provider | Role / Environment | Price | Notes |
 |---|---|---|---|
-| **Wasabi** | ~$7/TB/month | Unlimited | Hot storage, no egress fees |
-| **Backblaze B2** | ~$6/TB/month | Unlimited | Economical, download fees apply |
-| **Cloudflare R2** | ~$0.015/GB/month | Unlimited | No egress fees |
-| **MinIO (self-hosted)** | Free | Depends on server | For on-premise |
+| **RustFS (self-hosted)** | **Development (Lerd) & Preview Demo** | Free (Open Source) | **Primary/Wajib** untuk dev & preview demo — native kompatibel dengan `lerd`, ultra-ringan (<20MB RAM), performa tinggi berbasis Rust |
+| **MinIO (self-hosted)** | **Development (Alternative)** | Free | Alternatif opsional untuk on-premise/local jika developer sudah memiliki MinIO |
+| **Cloudflare R2** | **Production Cloud Target** | ~$0.015/GB/month | **Diutamakan** — S3 API kompatibel, zero egress fee, terhubung Cloudflare CDN |
+| **AWS S3** | **Production Cloud Target** | Pay-as-you-go | Standar industri high durability (99.999999999%) + CloudFront |
+| **Wasabi / Backblaze B2** | **Production Cloud Alternative** | ~$6-$7/TB/month | Opsi cloud storage ekonomis |
 
 ### Laravel Integration
 
@@ -168,15 +180,15 @@ bucket-smauii/
         'driver' => 's3',
         'key' => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
-        'region' => env('AWS_DEFAULT_REGION'),
+        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
         'bucket' => env('AWS_BUCKET'),
         'url' => env('AWS_URL'),
-        'endpoint' => env('AWS_ENDPOINT'), // Important for MinIO/S3-compatible
-        'use_path_style_endpoint' => true,
+        'endpoint' => env('AWS_ENDPOINT'), // Penting untuk RustFS/MinIO/R2
+        'use_path_style_endpoint' => filter_var(env('AWS_USE_PATH_STYLE_ENDPOINT', false), FILTER_VALIDATE_BOOLEAN),
     ],
 ],
 
-// Upload example
+// Upload example via StorageService
 $path = $request->file('photo')->storeAs(
     'attendances/' . now()->format('Y/m'),
     $student->nis . '_' . now()->format('Ymd_His') . '.jpg',
