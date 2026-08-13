@@ -23,6 +23,7 @@ Repositori `aksesekolah.git` adalah **monorepo entrypoint** yang menjadi gerbang
 | [07-git-workflow-submodule.md](./07-git-workflow-submodule.md) | Panduan git workflow dan manajemen submodule |
 | [08-budget-timeline-roadmap.md](./08-budget-timeline-roadmap.md) | Rencana anggaran, timeline 8 minggu, dan peta jalan masa depan |
 | [09-deployment-infrastruktur.md](./09-deployment-infrastruktur.md) | Spesifikasi infrastruktur, deployment, dan object storage |
+| [10-design-system-storybook.md](./10-design-system-storybook.md) | Design system terpadu, Storybook showcase, dan roadmap porting multi-platform |
 
 ## Repositori Terkait
 
